@@ -10,45 +10,62 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Noto+Serif+JP:wght@200;400;600&family=Inter:wght@200;400&display=swap" rel="stylesheet">
 
     <style>
-        /* --- 6. 色彩設計: 墨色、アイボリー、淡いシャンパンゴールド --- */
         :root {
-            --color-bg-deep: #050505;     /* 深い闇 */
-            --color-bg-layer: #0c0c0c;    /* 重なりのある背景 */
-            --color-gold: #c5a059;        /* 鈍く光る金 */
-            --color-ivory: #f2f2f2;       /* 柔らかなアイボリー */
-            --color-text-sub: #909090;    /* 控えめな注釈色 */
+            --color-bg: #050505;
+            --color-bg-layer: #0c0c0c;
+            --color-gold: #c5a059;
+            --color-ivory: #f2f2f2;
+            --color-text-sub: #909090;
             --serif: "Noto Serif JP", serif;
             --accent: "Cinzel", serif;
-            --sans: "Inter", "Hiragino Sans", sans-serif;
-            --ease-luxury: cubic-bezier(0.22, 1, 0.36, 1); /* 7. 上品なイージング */
+            --ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
         }
 
+        /* 1 & 5. スクロールスナップ設定 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        html { 
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory; /* セクションごとに固定 */
+        }
         body {
-            background-color: var(--color-bg-deep);
+            background-color: var(--color-bg);
             color: var(--color-ivory);
             font-family: var(--serif);
-            line-height: 2.2;
+            line-height: 2;
             letter-spacing: 0.12em;
-            overflow-x: hidden;
         }
 
-        /* レイアウト: 余裕のある余白 (White Space) */
-        .container { max-width: 1400px; margin: 0 auto; padding: 0 60px; }
-        .container-sm { max-width: 800px; margin: 0 auto; padding: 0 40px; }
+        section {
+            height: 100vh;
+            scroll-snap-align: start; /* スクロール固定位置 */
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-        /* --- ヘッダー: 透過と微細なボーダー --- */
+        /* 2. ヘッダー固定: スクロールで移動しない */
         .header {
-            position: fixed; top: 0; width: 100%; height: 100px;
-            z-index: 1000; display: flex; align-items: center;
-            transition: all 0.8s var(--ease-luxury);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 60px;
+            background: linear-gradient(to bottom, rgba(5,5,5,0.8), transparent);
+            pointer-events: none; /* 下のコンテンツの操作を邪魔しない */
         }
-        .header.scrolled {
-            height: 70px; background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+        .header-inner { 
+            width: 100%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            pointer-events: auto; /* ボタン類は反応させる */
         }
-        .header-inner { width: 100%; display: flex; justify-content: space-between; align-items: center; }
         .logo { text-decoration: none; color: #fff; }
         .logo-jp { font-size: 1.3rem; font-weight: 600; letter-spacing: 0.4em; display: block; margin-bottom: 4px; }
         .logo-en { font-family: var(--accent); font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.5em; }
@@ -56,123 +73,92 @@
         .nav-list { display: flex; list-style: none; gap: 40px; }
         .nav-link { 
             text-decoration: none; color: #fff; font-size: 0.7rem; letter-spacing: 0.25em;
-            font-family: var(--sans); text-transform: uppercase; opacity: 0.5; transition: 0.4s;
+            text-transform: uppercase; opacity: 0.5; transition: 0.4s;
         }
-        .nav-link:hover, .nav-link.active { opacity: 1; color: var(--color-gold); }
+        .nav-link:hover { opacity: 1; color: var(--color-gold); }
 
-        /* --- 1. ヒーロー: 情緒的なフェードと詩的な言葉 --- */
-        .hero {
-            position: relative; height: 100vh; display: flex; align-items: center; justify-content: center;
-            overflow: hidden; text-align: center;
+        /* 1. 背景スライド: クロスフェードの修正 */
+        .hero-slider {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
         }
-        .hero-slider { position: absolute; inset: 0; z-index: 1; }
         .hero-slider img {
-            width: 100%; height: 100%; object-fit: cover; opacity: 0;
-            transition: opacity 2.5s ease-in-out, transform 10s linear;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0; /* 最初は非表示 */
+            transition: opacity 2s ease-in-out, transform 10s linear;
         }
-        .hero-slider img.active { opacity: 0.5; transform: scale(1.08); }
-        .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 20%, #000 100%); z-index: 2; }
-        
-        .hero-content { position: relative; z-index: 3; }
+        .hero-slider img.active {
+            opacity: 0.5; /* 暗転を防ぐため、常に1枚は表示 */
+            transform: scale(1.1);
+            z-index: 2;
+        }
+
+        .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 20%, #000 120%); z-index: 3; }
+        .hero-content { position: relative; z-index: 4; text-align: center; }
         .hero-title { font-size: clamp(1.8rem, 5vw, 3.5rem); font-weight: 200; line-height: 1.8; margin-bottom: 35px; letter-spacing: 0.45em; }
-        .hero-sub { font-family: var(--accent); font-size: 0.85rem; color: var(--color-gold); letter-spacing: 0.6em; margin-bottom: 60px; }
-        
-        .btn-luxury {
-            display: inline-block; padding: 22px 65px; border: 1px solid var(--color-gold);
-            color: var(--color-gold); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.4em;
-            background: rgba(197, 160, 89, 0.03); transition: 0.6s var(--ease-luxury);
-            font-family: var(--sans);
+
+        /* 4. ギャラリー構造の自動化用CSS */
+        .gallery-container {
+            width: 100%;
+            max-width: 1400px;
+            padding: 0 60px;
+            display: flex;
+            align-items: center;
+            gap: 80px;
         }
-        .btn-luxury:hover { background: var(--color-gold); color: #000; box-shadow: 0 0 40px rgba(197, 160, 89, 0.3); }
-
-        /* --- 2. ギャラリー: ストーリー性を持たせた展示 --- */
-        .section { padding: 180px 0; }
-        .section-header { text-align: center; margin-bottom: 120px; }
-        .section-title { font-size: 2.2rem; font-weight: 200; letter-spacing: 0.4em; margin-bottom: 15px; }
-        .section-subtitle { font-family: var(--accent); font-size: 0.7rem; color: var(--color-gold); letter-spacing: 0.5em; }
-
-        .gallery-grid { display: flex; flex-direction: column; gap: 180px; }
-        .gallery-item { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 80px; align-items: center; }
-        .gallery-item:nth-child(even) { direction: rtl; }
-        .gallery-item:nth-child(even) .item-info { direction: ltr; }
-
-        .item-visual { position: relative; overflow: hidden; cursor: pointer; background: #000; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .item-visual img { width: 100%; display: block; transition: 1.8s var(--ease-luxury); filter: brightness(0.85); }
-        .item-visual:hover img { transform: scale(1.05); filter: brightness(1.05); }
-        /* ホバー時の光沢 */
-        .item-visual::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%);
-            opacity: 0; transition: 0.8s;
+        .item-visual { 
+            flex: 1.2; 
+            position: relative; 
+            overflow: hidden; 
+            background: #000;
+            cursor: pointer;
         }
-        .item-visual:hover::after { opacity: 1; }
+        .item-visual img { width: 100%; display: block; transition: 1.5s var(--ease-luxury); filter: brightness(0.8); }
+        .item-visual:hover img { transform: scale(1.05); filter: brightness(1.0); }
+        .item-info { flex: 0.8; padding: 0 30px; }
+        .item-name { font-size: 2rem; margin-bottom: 20px; font-weight: 400; }
+        .item-desc { color: var(--color-text-sub); font-size: 0.95rem; font-weight: 200; }
 
-        .item-info { padding: 0 30px; }
-        .item-num { font-family: var(--accent); color: var(--color-gold); font-size: 0.75rem; margin-bottom: 15px; display: block; }
-        .item-name { font-size: 1.8rem; margin-bottom: 25px; font-weight: 400; letter-spacing: 0.2em; }
-        .item-desc { font-size: 0.9rem; color: var(--color-text-sub); font-weight: 200; line-height: 2.6; }
-
-        /* --- 3. プロフィール: 写真観を深く語る --- */
-        .profile { background-color: var(--color-bg-layer); border-top: 1px solid rgba(255,255,255,0.03); }
-        .profile-vision { font-size: 1rem; max-width: 600px; margin: 45px auto; line-height: 2.8; }
-        .profile-meta { display: flex; justify-content: center; gap: 80px; margin-top: 70px; }
-        .meta-box dt { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.3em; margin-bottom: 12px; text-transform: uppercase; }
-        .meta-box dd { font-size: 1.1rem; font-weight: 200; }
-
-        /* --- 4. コンタクト: フォーム実装 & SNS --- */
-        .contact-card { background: #000; padding: 100px 70px; border: 1px solid rgba(197, 160, 89, 0.1); text-align: center; }
-        .form-group { margin-bottom: 40px; text-align: left; }
-        .form-label { font-size: 0.65rem; color: var(--color-gold); letter-spacing: 0.2em; display: block; margin-bottom: 12px; }
+        /* 3 & 4. プロフィールとコンタクト */
+        .container-sm { max-width: 800px; width: 100%; margin: 0 auto; padding: 0 40px; text-align: center; }
+        .contact-card { background: var(--color-bg-layer); padding: 60px; border: 1px solid rgba(197, 160, 89, 0.1); }
         .form-input { 
-            width: 100%; background: transparent; border: none; border-bottom: 1px solid #2a2a2a; 
-            padding: 15px 0; color: #fff; font-family: var(--serif); font-size: 1rem; transition: 0.5s var(--ease-luxury);
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; 
+            padding: 15px 0; color: #fff; margin-bottom: 30px; font-family: var(--serif);
         }
         .form-input:focus { outline: none; border-bottom: 1px solid var(--color-gold); }
-        
-        .sns-group { display: flex; justify-content: center; gap: 45px; margin-top: 70px; }
-        .sns-link { 
-            color: var(--color-text-sub); text-decoration: none; font-size: 0.75rem; 
-            letter-spacing: 0.25em; font-family: var(--sans); transition: 0.4s;
-            position: relative; padding-bottom: 5px;
+        .btn-send {
+            padding: 15px 40px; border: 1px solid var(--color-gold); background: transparent;
+            color: var(--color-gold); cursor: pointer; transition: 0.4s; letter-spacing: 0.3em;
         }
-        .sns-link::after { content: ''; position: absolute; width: 0; height: 1px; bottom: 0; left: 0; background: var(--color-gold); transition: 0.4s; }
+        .btn-send:hover { background: var(--color-gold); color: #000; }
+
+        .sns-group { display: flex; justify-content: center; gap: 40px; margin-top: 40px; }
+        .sns-link { color: var(--color-text-sub); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.2em; transition: 0.3s; }
         .sns-link:hover { color: var(--color-gold); }
-        .sns-link:hover::after { width: 100%; }
 
-        /* --- 7. アニメーション --- */
-        .reveal { opacity: 0; transform: translateY(40px); transition: 1.8s var(--ease-luxury); }
+        /* フェードアニメーション */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1.5s var(--ease-luxury); }
         .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* モーダル表示 */
-        .modal {
-            position: fixed; inset: 0; z-index: 2000; display: none; align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.8s ease;
-        }
-        .modal-bg { position: absolute; inset: 0; background: rgba(0,0,0,0.97); backdrop-filter: blur(15px); }
-        .modal-content { position: relative; z-index: 2001; max-width: 90%; text-align: center; }
-        .modal-img { max-width: 100%; max-height: 80vh; box-shadow: 0 0 80px rgba(0,0,0,1); }
-
-        /* レスポンシブ */
-        @media (max-width: 1024px) {
-            .gallery-item { grid-template-columns: 1fr; gap: 50px; }
-            .container { padding: 0 30px; }
-            .hero-title { font-size: 2.1rem; }
-            .contact-card { padding: 60px 30px; }
-            .profile-meta { gap: 40px; flex-direction: column; }
-        }
     </style>
 </head>
 <body>
 
-    <header class="header" id="navbar">
-        <div class="header-inner container">
-            <a href="#" class="logo">
+    <header class="header">
+        <div class="header-inner">
+            <a href="#home" class="logo">
                 <span class="logo-jp">田中 凛</span>
-                <span class="logo-en">FINE ART PORTFOLIO</span>
+                <span class="logo-en">RIN TANAKA</span>
             </a>
             <nav>
                 <ul class="nav-list">
-                    <li><a href="#gallery" class="nav-link">Gallery</a></li>
+                    <li><a href="#home" class="nav-link">Home</a></li>
+                    <li><a href="#gallery-section" class="nav-link">Gallery</a></li>
                     <li><a href="#vision" class="nav-link">Vision</a></li>
                     <li><a href="#contact" class="nav-link">Contact</a></li>
                 </ul>
@@ -180,184 +166,123 @@
         </div>
     </header>
 
-    <main>
-        <section class="hero">
-            <div class="hero-slider" id="heroSlider">
-                <img src="001_2232.jpg" class="active" alt="">
-                <img src="001_1943.jpg" alt="">
-            </div>
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <div class="reveal">
-                    <h1 class="hero-title">光を聴き、<br>静寂を刻む。</h1>
-                    <p class="hero-sub">THE ARCHIVE OF SILENT LIGHT</p>
-                    <a href="#gallery" class="btn-luxury">ギャラリーへ入る</a>
-                </div>
-            </div>
-        </section>
-
-        <section id="gallery" class="section">
-            <div class="container">
-                <header class="section-header reveal">
-                    <h2 class="section-title">物語の断片</h2>
-                    <p class="section-subtitle">SELECTED WORKS</p>
-                </header>
-
-                <div class="gallery-grid">
-                    <article class="gallery-item reveal">
-                        <div class="item-visual" data-exif="Nikon Z 50II | 35mm | f/1.8">
-                            <img src="001_2232.jpg" alt="Silence">
-                        </div>
-                        <div class="item-info">
-                            <span class="item-num">01 / ARCHIVE</span>
-                            <h3 class="item-name">静寂の淵</h3>
-                            <p class="item-desc">
-                                音を吸い込むような冷涼な空気の中で。
-                                寺院の回廊に落ちる光は、目に見えない時間の粒子を可視化させます。
-                                私はただ、その場所が持つ「祈り」に近い気配を記録しました。
-                            </p>
-                        </div>
-                    </article>
-
-                    <article class="gallery-item reveal">
-                        <div class="item-visual" data-exif="Nikon Z 50II | 50mm | f/4.0">
-                            <img src="001_1943.jpg" alt="Urban">
-                        </div>
-                        <div class="item-info">
-                            <span class="item-num">02 / URBAN</span>
-                            <h3 class="item-name">都市の幾何学</h3>
-                            <p class="item-desc">
-                                無機質な鉄とガラスが交差する瞬間。
-                                都会の喧騒の中に現れる、奇跡的なまでの均衡。
-                                人工物が放つ冷たい美しさの中に、わずかな情緒を探して。
-                            </p>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section id="vision" class="section profile">
-            <div class="container-sm reveal" style="text-align: center;">
-                <p class="section-subtitle">VISION</p>
-                <h2 class="section-title" style="font-size: 2rem; margin-top: 25px;">田中 凛</h2>
-                <div class="profile-vision">
-                    <p>単なる記録ではなく、その場の「湿度」を撮りたい。</p>
-                    <p style="margin-top: 35px; font-size: 0.9rem; color: var(--color-text-sub); font-weight: 200;">
-                        日常のノイズを削ぎ落とした先にある、本質的な静けさを追求しています。<br>
-                        Nikon Z 50IIと共に歩く時間は、世界との対話そのものです。<br>
-                        光の美しさだけでなく、その裏側にある気配や感情までを一枚に閉じ込めること。それが私の表現の軸です。
-                    </p>
-                </div>
-                <dl class="profile-meta">
-                    <div class="meta-box">
-                        <dt>Camera Body</dt>
-                        <dd>Nikon Z 50II</dd>
-                    </div>
-                    <div class="meta-box">
-                        <dt>Based In</dt>
-                        <dd>Chiba / Tokyo</dd>
-                    </div>
-                </dl>
-            </div>
-        </section>
-
-        <section id="contact" class="section">
-            <div class="container-sm reveal">
-                <div class="contact-card">
-                    <h3 style="font-size: 1.8rem; font-weight: 200; margin-bottom: 12px; letter-spacing: 0.2em;">Contact</h3>
-                    <p style="font-size: 0.85rem; color: var(--color-gold); margin-bottom: 55px; letter-spacing: 0.1em;">展示のご依頼・お問い合わせを承ります</p>
-                    
-                    <form action="https://formspree.io/f/maqplpnr" method="POST">
-                        <div class="form-group">
-                            <label class="form-label">お名前 / Name</label>
-                            <input type="text" name="name" class="form-input" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">メールアドレス / Email</label>
-                            <input type="email" name="email" class="form-input" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">ご用件 / Message</label>
-                            <textarea name="message" class="form-input" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn-luxury" style="width: 100%; cursor: pointer; margin-top: 20px;">
-                            メッセージを送信する
-                        </button>
-                    </form>
-
-                    <div class="sns-group">
-                        <a href="https://www.instagram.com/7r11n_/" target="_blank" class="sns-link">INSTAGRAM</a>
-                        <a href="https://x.com/cossrin" target="_blank" class="sns-link">X (TWITTER)</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer style="padding: 110px 0; text-align: center; opacity: 0.3; font-family: var(--sans);">
-        <p style="font-size: 0.6rem; letter-spacing: 0.5em;">&copy; 2026 RIN TANAKA PHOTOGRAPHY. ALL RIGHTS RESERVED.</p>
-    </footer>
-
-    <div id="modal" class="modal">
-        <div class="modal-bg" id="modalClose"></div>
-        <div class="modal-content">
-            <img src="" alt="" class="modal-img" id="modalImg">
-            <p id="modalExif" style="margin-top: 30px; font-family: var(--sans); font-size: 0.7rem; color: var(--color-gold); letter-spacing: 0.2em;"></p>
+    <section id="home">
+        <div class="hero-slider" id="heroSlider">
+            <img src="001_2232.jpg" class="active" alt="">
+            <img src="001_1943.jpg" alt="">
         </div>
-    </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content reveal">
+            <h1 class="hero-title">光を聴き、<br>静寂を刻む。</h1>
+            <p style="color: var(--color-gold); letter-spacing: 0.6em;">ECHOES OF MOMENTS</p>
+        </div>
+    </section>
+
+    <div id="gallery-root"></div>
+
+    <section id="vision" class="profile">
+        <div class="container-sm reveal">
+            <h2 style="font-size: 2.2rem; margin-bottom: 30px;">田中 凛</h2>
+            <p style="margin-bottom: 40px; line-height: 2.5;">
+                日常のノイズを削ぎ落とした先にある、本質的な静けさを追求しています。<br>
+                Nikon Z 50IIと共に歩く時間は、世界との対話そのものです。
+            </p>
+            <div style="display: flex; justify-content: center; gap: 60px;">
+                <div>
+                    <p style="font-size: 0.6rem; color: var(--color-gold);">GEAR</p>
+                    <p>Nikon Z 50II</p>
+                </div>
+                <div>
+                    <p style="font-size: 0.6rem; color: var(--color-gold);">BASE</p>
+                    <p>Tokyo/Chiba</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container-sm reveal">
+            <div class="contact-card">
+                <h3 style="margin-bottom: 40px; font-weight: 200; letter-spacing: 0.3em;">CONTACT</h3>
+                <form action="https://formspree.io/f/maqplpnr" method="POST">
+                    <input type="text" name="name" class="form-input" placeholder="Name" required>
+                    <input type="email" name="email" class="form-input" placeholder="Email" required>
+                    <textarea name="message" class="form-input" placeholder="Message" rows="4" required></textarea>
+                    <button type="submit" class="btn-send">SEND MESSAGE</button>
+                </form>
+
+                <div class="sns-group">
+                    <a href="https://www.instagram.com/7r11n_/" target="_blank" class="sns-link">INSTAGRAM</a>
+                    <a href="https://x.com/cossrin" target="_blank" class="sns-link">X / TWITTER</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <script>
-        // スクロール時のヘッダー制御
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            navbar.classList.toggle('scrolled', window.scrollY > 100);
+        /* ==========================================
+           4. 簡単写真追加システム
+           新しい写真を追加したいときは、以下の galleryData 配列に
+           { src: "ファイル名", name: "作品名", desc: "説明" } を足すだけです。
+        ========================================== */
+        const galleryData = [
+            {
+                src: "001_2232.jpg",
+                name: "静寂の淵",
+                desc: "寺院の回廊に落ちる光は、目に見えない時間の粒子を可視化させます。"
+            },
+            {
+                src: "001_1943.jpg",
+                name: "都市の幾何学",
+                desc: "無機質な鉄とガラスが交差する瞬間。都会の喧騒の中に現れる均衡。"
+            }
+            // ここに新しいオブジェクトを追加するだけでセクションが自動で増えます
+        ];
+
+        const galleryRoot = document.getElementById('gallery-root');
+        galleryData.forEach((item, index) => {
+            const section = document.createElement('section');
+            section.id = `gallery-item-${index}`;
+            section.innerHTML = `
+                <div class="gallery-container">
+                    <div class="item-visual reveal">
+                        <img src="${item.src}" alt="${item.name}">
+                    </div>
+                    <div class="item-info reveal">
+                        <span style="color: var(--color-gold); font-family: var(--accent); font-size: 0.8rem;">0${index + 1} / ARCHIVE</span>
+                        <h3 class="item-name">${item.name}</h3>
+                        <p class="item-desc">${item.desc}</p>
+                    </div>
+                </div>
+            `;
+            galleryRoot.appendChild(section);
         });
 
-        // 1. ヒーロースライダー
+        /* ==========================================
+           1. 背景スライド制御 (クロスフェード)
+        ========================================== */
         const slides = document.querySelectorAll('#heroSlider img');
         let currentSlide = 0;
-        setInterval(() => {
+
+        function nextSlide() {
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active');
-        }, 6000);
+        }
+        setInterval(nextSlide, 5000);
 
-        // 7. アニメーション (Intersection Observer)
+        /* ==========================================
+           5. アニメーション制御
+        ========================================== */
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.2 });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // モーダル機能
-        const modal = document.getElementById('modal');
-        const modalImg = document.getElementById('modalImg');
-        const modalExif = document.getElementById('modalExif');
-
-        document.querySelectorAll('.item-visual').forEach(visual => {
-            visual.addEventListener('click', () => {
-                const img = visual.querySelector('img').src;
-                const exif = visual.getAttribute('data-exif');
-                modalImg.src = img;
-                modalExif.textContent = exif;
-                modal.style.display = 'flex';
-                setTimeout(() => { modal.style.opacity = '1'; }, 50);
-                document.body.style.overflow = 'hidden';
-            });
-        });
-
-        document.getElementById('modalClose').addEventListener('click', () => {
-            modal.style.opacity = '0';
-            setTimeout(() => { 
-                modal.style.display = 'none'; 
-                document.body.style.overflow = 'auto';
-            }, 800);
-        });
     </script>
 </body>
 </html>
