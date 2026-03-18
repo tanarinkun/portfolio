@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="icon.png">
-
-    <title>田中 凛 | 写真作品集 - 刻まれる光、静寂の淵</title>
+    <link rel="apple-touch-icon" href="icon.png"> <title>田中 凛 | 写真作品集 - 刻まれる光、静寂の淵</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Noto+Serif+JP:wght@200;400;600&family=Inter:wght@200;400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         /* --- デザイントークン --- */
@@ -33,7 +33,7 @@
         
         html { 
             scroll-behavior: smooth;
-            scroll-snap-type: y mandatory; /* ページごとに固定 */
+            scroll-snap-type: y mandatory;
         }
         
         body {
@@ -68,20 +68,19 @@
         }
         .header.scrolled {
             height: 65px;
-            background: rgba(5, 5, 5, 0.8);
+            background: rgba(5, 5, 5, 0.7);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(197, 160, 89, 0.15);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
         .header-inner { width: 100%; display: flex; justify-content: space-between; align-items: center; }
         
-        .logo { text-decoration: none; color: #fff; line-height: 1.1; pointer-events: auto; }
-        .logo-name { font-size: 1.2rem; font-weight: 600; letter-spacing: 0.4em; display: block; }
+        .logo { text-decoration: none; color: #fff; line-height: 1.1; cursor: pointer; }
+        .logo-name { font-size: 1.25rem; font-weight: 600; letter-spacing: 0.4em; display: block; }
         .logo-sub { font-family: var(--font-accent); font-size: 0.55rem; color: var(--color-gold); letter-spacing: 0.5em; }
 
         .nav-list { display: flex; list-style: none; gap: 30px; }
         .nav-link { 
-            text-decoration: none; color: #fff; font-size: 0.7rem; 
+            text-decoration: none; color: #fff; font-size: 0.75rem; 
             font-family: var(--font-sans); letter-spacing: 0.2em; opacity: 0.35; transition: 0.4s;
             text-transform: uppercase;
         }
@@ -92,47 +91,60 @@
         .hero-slider img {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
             opacity: 0; transform: scale(1.1);
-            transition: opacity 3s ease-in-out, transform 12s linear;
+            transition: opacity 3s ease-in-out, transform 15s linear;
         }
-        .hero-slider img.active { opacity: 0.4; transform: scale(1.0); z-index: 2; }
+        .hero-slider img.active { opacity: 0.45; transform: scale(1.0); z-index: 2; }
         .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 20%, #000 140%); z-index: 3; }
         .hero-content { position: relative; z-index: 4; text-align: center; padding: 0 20px; }
         .hero-title { font-size: clamp(1.8rem, 8vw, 3.5rem); font-weight: 200; letter-spacing: 0.5em; line-height: 1.6; margin-bottom: 20px; }
 
-        /* --- 3. ギャラリー (動的生成) --- */
+        /* --- 3. ギャラリー & モーダル --- */
         .gallery-container {
             width: 100%; max-width: 1200px; padding: 0 40px;
             display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
         }
         .item-visual { position: relative; overflow: hidden; background: #000; box-shadow: 0 30px 60px rgba(0,0,0,0.6); cursor: pointer; }
-        .item-visual img { width: 100%; display: block; transition: 1.8s var(--ease-luxury); filter: brightness(0.85); }
-        .item-visual:hover img, .item-visual.active img { transform: scale(1.05); filter: brightness(1.1); }
+        .item-visual img { width: 100%; display: block; transition: 1.5s var(--ease-luxury); filter: brightness(0.85); }
+        .item-visual:hover img { transform: scale(1.05); filter: brightness(1.1); }
         
         .item-info { padding-right: 20px; }
-        .item-num { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.75rem; margin-bottom: 10px; display: block; }
-        .item-name { font-size: clamp(1.5rem, 4vw, 2.2rem); margin-bottom: 25px; font-weight: 400; letter-spacing: 0.2em; }
-        .item-desc { font-size: 0.9rem; color: var(--color-text-dim); font-weight: 200; line-height: 2.4; margin-bottom: 15px; }
-        .item-exif { font-family: var(--font-sans); font-size: 0.65rem; color: var(--color-gold); opacity: 0.6; letter-spacing: 0.1em; }
+        .item-num { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.7rem; margin-bottom: 10px; display: block; }
+        .item-name { font-size: clamp(1.4rem, 4vw, 2.2rem); margin-bottom: 20px; font-weight: 400; letter-spacing: 0.2em; }
+        .item-desc { font-size: 0.9rem; color: var(--color-text-dim); font-weight: 200; line-height: 2.2; }
 
-        /* --- 4. お知らせページ (カードリスト) --- */
-        .news-box { width: 90%; max-width: 850px; background: var(--color-bg-layer); padding: 50px; border: 1px solid rgba(197, 160, 89, 0.12); }
-        .news-item { padding: 25px 0; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        /* 大画面表示（モーダル） */
+        .modal {
+            position: fixed; inset: 0; background: rgba(5,5,5,0.98); z-index: 2000;
+            display: flex; opacity: 0; pointer-events: none; transition: 0.6s var(--ease-luxury);
+        }
+        .modal.active { opacity: 1; pointer-events: auto; }
+        .modal-inner { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; }
+        .modal-img { max-width: 90%; max-height: 75vh; object-fit: contain; box-shadow: 0 0 100px rgba(0,0,0,1); }
+        .modal-info { text-align: center; margin-top: 30px; max-width: 700px; }
+        .modal-title { font-size: 1.4rem; letter-spacing: 0.2em; margin-bottom: 10px; }
+        .modal-exif { font-family: var(--font-sans); font-size: 0.65rem; color: var(--color-gold); letter-spacing: 0.15em; text-transform: uppercase; }
+        .modal-close { position: absolute; top: 30px; right: 30px; color: #fff; cursor: pointer; opacity: 0.5; transition: 0.3s; }
+        .modal-close:hover { opacity: 1; }
+
+        /* --- 4. お知らせページ --- */
+        .news-box { width: 90%; max-width: 800px; background: var(--color-bg-layer); padding: 50px 40px; border: 1px solid rgba(197, 160, 89, 0.12); }
+        .news-item { padding: 25px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .news-item:last-child { border-bottom: none; }
         .news-date { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.75rem; display: block; margin-bottom: 8px; }
-        .news-title { font-size: 1.15rem; font-weight: 400; margin-bottom: 10px; letter-spacing: 0.05em; }
+        .news-title { font-size: 1.1rem; font-weight: 400; margin-bottom: 10px; }
         .news-body { font-size: 0.85rem; color: var(--color-text-dim); line-height: 2.0; }
 
-        /* --- 5. プロフィール --- */
+        /* --- 5. プロフィール (Tokyo/Chiba 修正済み) --- */
         .profile-card { max-width: 700px; text-align: center; padding: 0 30px; }
-        .profile-vision { font-size: clamp(0.95rem, 3vw, 1.1rem); margin: 40px 0; line-height: 2.8; word-break: keep-all; }
-        .profile-meta { display: flex; justify-content: center; gap: 60px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 50px; }
+        .profile-vision { font-size: clamp(0.9rem, 3vw, 1.1rem); margin: 40px 0; line-height: 2.6; word-break: keep-all; }
+        .profile-meta { display: flex; justify-content: center; gap: 60px; margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px; }
         .meta-item dt { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.3em; margin-bottom: 10px; text-transform: uppercase; }
         .meta-item dd { font-size: 1.1rem; font-weight: 200; }
 
-        /* --- 6. コンタクト --- */
+        /* --- 6. コンタクト (SNSアイコン) --- */
         .contact-box { width: 90%; max-width: 600px; background: var(--color-bg-layer); padding: 60px 40px; border: 1px solid rgba(197, 160, 89, 0.12); }
         .form-group { margin-bottom: 30px; text-align: left; }
-        .form-label { font-size: 0.65rem; color: var(--color-gold); letter-spacing: 0.2em; display: block; margin-bottom: 10px; }
+        .form-label { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.2em; display: block; margin-bottom: 10px; }
         .form-input { 
             width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; 
             padding: 12px 0; color: #fff; font-family: var(--font-serif); font-size: 1rem; transition: 0.4s;
@@ -143,15 +155,16 @@
             color: var(--color-gold); cursor: pointer; transition: 0.5s; letter-spacing: 0.4em; font-family: var(--font-sans);
         }
         .btn-luxury:hover { background: var(--color-gold); color: #000; box-shadow: 0 0 30px rgba(197, 160, 89, 0.2); }
+        
         .sns-group { display: flex; justify-content: center; gap: 40px; margin-top: 50px; }
-        .sns-link { color: var(--color-text-dim); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.2em; transition: 0.3s; }
-        .sns-link:hover { color: var(--color-gold); }
+        .sns-link { color: var(--color-text-dim); transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .sns-link:hover { color: var(--color-gold); transform: translateY(-3px); }
 
         /* --- 7. アニメーション --- */
-        .reveal { opacity: 0; transform: translateY(35px); transition: 1.8s var(--ease-luxury); }
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1.8s var(--ease-luxury); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* モバイル最適化 (1024px以下) */
+        /* モバイル最適化 */
         @media (max-width: 1024px) {
             .gallery-container { grid-template-columns: 1fr; gap: 40px; text-align: center; padding: 0 25px; }
             .item-visual { order: 1; }
@@ -159,7 +172,8 @@
             .header { padding: 0 20px; }
             .nav-list { gap: 15px; }
             .profile-meta { flex-direction: column; gap: 40px; }
-            .news-box { padding: 30px 20px; }
+            .modal-inner { padding: 20px; }
+            .modal-close { top: 20px; right: 20px; }
         }
     </style>
 </head>
@@ -185,8 +199,8 @@
     <main>
         <section id="home" class="screen" data-section="home">
             <div class="hero-slider" id="heroSlider">
-                <img src="001_2232.jpg" class="active" alt="Main View 1">
-                <img src="001_1943.jpg" alt="Main View 2">
+                <img src="001_2232.jpg" class="active" alt="">
+                <img src="001_1943.jpg" alt="">
             </div>
             <div class="hero-overlay"></div>
             <div class="hero-content reveal">
@@ -214,17 +228,16 @@
                     <p style="font-size: 0.95rem; color: var(--color-text-dim); margin-top: 30px; font-weight: 200;">
                         日常のノイズを削ぎ落とした先にある、本質的な静けさを追求しています。<br>
                         Nikon Z 50IIと共に歩く時間は、世界との対話そのものです。<br>
-                        目に見える光だけでなく、その裏側にある感情までも閉じ込めること。<br>
-                        それが私の表現の軸です。
+                        目に見える光だけでなく、その裏側にある感情までも閉じ込めること。
                     </p>
                 </div>
                 <dl class="profile-meta">
                     <div class="meta-item">
-                        <dt>Camera Gear</dt>
+                        <dt>Gear</dt>
                         <dd>Nikon Z 50II</dd>
                     </div>
                     <div class="meta-item">
-                        <dt>Base Region</dt>
+                        <dt>Base</dt>
                         <dd>Tokyo / Chiba</dd>
                     </div>
                 </dl>
@@ -233,77 +246,81 @@
 
         <section id="contact" class="screen" data-section="contact">
             <div class="contact-box reveal">
-                <h3 style="text-align: center; font-size: 1.6rem; margin-bottom: 10px; font-weight: 200;">Contact</h3>
-                <p style="text-align: center; font-size: 0.7rem; color: var(--color-gold); margin-bottom: 50px; letter-spacing: 0.2em;">展示・撮影依頼・お問い合わせ</p>
-                
+                <h3 style="text-align: center; font-size: 1.6rem; margin-bottom: 40px; font-weight: 200; letter-spacing: 0.2em;">CONTACT</h3>
                 <form action="https://formspree.io/f/maqplpnr" method="POST">
                     <div class="form-group">
-                        <label class="form-label">名前 / NAME</label>
+                        <label class="form-label">NAME</label>
                         <input type="text" name="name" class="form-input" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">メールアドレス / EMAIL</label>
+                        <label class="form-label">EMAIL</label>
                         <input type="email" name="email" class="form-input" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">メッセージ / MESSAGE</label>
-                        <textarea name="message" class="form-input" rows="4" required></textarea>
+                        <label class="form-label">MESSAGE</label>
+                        <textarea name="message" class="form-input" rows="3" required></textarea>
                     </div>
                     <button type="submit" class="btn-luxury">SEND MESSAGE</button>
                 </form>
-
                 <div class="sns-group">
-                    <a href="https://www.instagram.com/7r11n_/" target="_blank" class="sns-link">INSTAGRAM</a>
-                    <a href="https://x.com/cossrin" target="_blank" class="sns-link">X (TWITTER)</a>
+                    <a href="https://www.instagram.com/7r11n_/?next=%2F" target="_blank" class="sns-link" aria-label="Instagram">
+                        <i data-lucide="instagram"></i>
+                    </a>
+                    <a href="https://x.com/cossrin" target="_blank" class="sns-link" aria-label="X (Twitter)">
+                        <i data-lucide="twitter"></i>
+                    </a>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer style="padding: 60px 0; text-align: center; font-size: 0.6rem; letter-spacing: 0.4em; opacity: 0.3; scroll-snap-align: end;">
-        &copy; 2026 RIN TANAKA PHOTOGRAPHY. ALL RIGHTS RESERVED.
-    </footer>
+    <div class="modal" id="galleryModal">
+        <div class="modal-inner">
+            <div class="modal-close" id="modalClose"><i data-lucide="x" size="40"></i></div>
+            <img src="" alt="" class="modal-img" id="modalImg">
+            <div class="modal-info">
+                <h4 class="modal-title" id="modalTitle"></h4>
+                <p class="item-desc" id="modalDesc" style="margin-bottom: 10px;"></p>
+                <p class="modal-exif" id="modalExif"></p>
+            </div>
+        </div>
+    </div>
 
     <script>
         /* ==========================================
-           3 & 4. データ管理システム (ここを編集するだけ)
+           1 & 2. データ管理システム (JSON)
         ========================================== */
         
-        // 写真データ (JSON形式で追加可能)
+        // 写真データ管理
         const PHOTO_DATA = [
             {
                 src: "001_2232.jpg",
                 name: "静寂の淵",
-                desc: "寺院の回廊に落ちる光は、目に見えない時間の粒子を可視化させます。音のない世界で、光だけが呼吸している。その気配を記録しました。",
-                exif: "Nikon Z 50II | f/2.8 | 1/125s | ISO 400"
+                desc: "寺院の回廊に落ちる光は、目に見えない時間の粒子を可視化させます。音のない世界で、光だけが呼吸している気配を記録しました。",
+                exif: "Nikon Z 50II / f2.8 / 1/200s / ISO 400"
             },
             {
                 src: "001_1943.jpg",
                 name: "都市の幾何学",
                 desc: "無機質な鉄とガラスが交差する瞬間。都会の喧騒の中に現れる、完璧な均衡。人工物が放つ冷たい美しさの中に、わずかな情緒を探して。",
-                exif: "Nikon Z 50II | f/4.0 | 1/500s | ISO 100"
+                exif: "Nikon Z 50II / f4.0 / 1/500s / ISO 100"
             }
+            // 新しい写真を追加する場合はここにオブジェクトを追記するだけ！
         ];
 
-        // お知らせデータ (JSON形式で追加可能)
+        // お知らせデータ管理
         const NEWS_DATA = [
             {
-                date: "2026.03.18",
-                title: "ポートフォリオサイトをリニューアルしました",
-                body: "より写真の世界観を深くお伝えするため、デザインと機能を全面的にアップデートいたしました。今後の展示情報などもこちらで発信いたします。"
-            },
-            {
-                date: "2026.04.10",
-                title: "個展「刻まれる光」開催のお知らせ",
-                body: "都内ギャラリーにて、新作を含む12枚の作品を展示いたします。皆様のご来場を心よりお待ちしております。詳細はContactよりお問い合わせください。"
+                date: "2026.03.17",
+                title: "ポートフォリオサイトを開設いたしました",
+                body: "これまでの写真作品をまとめたアーカイブサイトを公開しました。刻々と変わる光の表情を、ここで共有していければと思います。"
             }
+            // 新しいお知らせを追加する場合はここに追記
         ];
 
         /* ==========================================
-           動的レンダリング & インタラクション
+           動的レンダリング
         ========================================== */
-
-        // ギャラリー生成
         const galleryRoot = document.getElementById('gallery-root');
         PHOTO_DATA.forEach((item, index) => {
             const section = document.createElement('section');
@@ -311,34 +328,52 @@
             section.setAttribute('data-section', 'gallery');
             section.innerHTML = `
                 <div class="gallery-container">
-                    <div class="item-visual reveal" onclick="this.classList.toggle('active')">
+                    <div class="item-visual reveal" onclick="openModal(${index})">
                         <img src="${item.src}" alt="${item.name}">
                     </div>
                     <div class="item-info reveal">
-                        <span class="item-num">Archive 0${index + 1}</span>
+                        <span class="item-num">Collection 0${index + 1}</span>
                         <h3 class="item-name">${item.name}</h3>
                         <p class="item-desc">${item.desc}</p>
-                        <p class="item-exif">${item.exif}</p>
                     </div>
                 </div>
             `;
             galleryRoot.appendChild(section);
         });
 
-        // お知らせ生成
         const newsList = document.getElementById('news-list');
         NEWS_DATA.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'news-item';
-            div.innerHTML = `
-                <span class="news-date">${item.date}</span>
-                <h4 class="news-title">${item.title}</h4>
-                <p class="news-body">${item.body}</p>
+            newsList.innerHTML += `
+                <div class="news-item">
+                    <span class="news-date">${item.date}</span>
+                    <h4 class="news-title">${item.title}</h4>
+                    <p class="news-body">${item.body}</p>
+                </div>
             `;
-            newsList.appendChild(div);
         });
 
-        // 背景スライドショー (クロスフェード)
+        /* ==========================================
+           ギャラリーモーダル制御
+        ========================================== */
+        const modal = document.getElementById('galleryModal');
+        function openModal(index) {
+            const data = PHOTO_DATA[index];
+            document.getElementById('modalImg').src = data.src;
+            document.getElementById('modalTitle').textContent = data.name;
+            document.getElementById('modalDesc').textContent = data.desc;
+            document.getElementById('modalExif').textContent = data.exif;
+            modal.classList.add('active');
+            // スクロールを一時停止
+            document.body.style.overflow = 'hidden';
+        }
+        document.getElementById('modalClose').onclick = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        /* ==========================================
+           背景スライドショー
+        ========================================== */
         const heroSlides = document.querySelectorAll('#heroSlider img');
         let currentSlide = 0;
         setInterval(() => {
@@ -347,7 +382,9 @@
             heroSlides[currentSlide].classList.add('active');
         }, 6000);
 
-        // スクロール検知 & ナビゲーション連動
+        /* ==========================================
+           UIインタラクション & スクロール検知
+        ========================================== */
         const header = document.getElementById('mainHeader');
         const navLinks = document.querySelectorAll('.nav-link');
         const sections = document.querySelectorAll('section, .screen');
@@ -356,24 +393,22 @@
             header.classList.toggle('scrolled', window.scrollY > 50);
         });
 
-        const observerOptions = { threshold: 0.5 };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // アニメーション発火
                     entry.target.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
-                    
-                    // ナビ強調
-                    const sectionId = entry.target.getAttribute('data-section') || entry.target.id;
+                    const id = entry.target.getAttribute('data-section') || entry.target.id;
                     navLinks.forEach(link => {
-                        link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
+                        link.classList.toggle('active', link.getAttribute('data-section') === id);
                     });
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.5 });
 
         sections.forEach(sec => observer.observe(sec));
-
+        
+        // アイコン描画
+        lucide.createIcons();
     </script>
 </body>
 </html>
