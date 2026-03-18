@@ -23,8 +23,9 @@
             --color-text-dim: #999999;
             --font-serif: "Noto Serif JP", serif;
             --font-accent: "Cinzel", serif;
-            --font-sans: "Inter", sans-serif;
+            --font-sans: "Inter", "Hiragino Sans", sans-serif;
             --ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
+            --header-h: 80px;
         }
 
         /* --- 全体レイアウト & スクロールスナップ --- */
@@ -32,7 +33,7 @@
         
         html { 
             scroll-behavior: smooth;
-            scroll-snap-type: y mandatory;
+            scroll-snap-type: y mandatory; /* ページごとに固定 */
         }
         
         body {
@@ -56,109 +57,109 @@
             overflow: hidden;
         }
 
-        /* --- ヘッダー --- */
+        /* --- 1. ヘッダー (固定 & 視認性強化) --- */
         .header {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 80px;
+            top: 0; left: 0; width: 100%; height: var(--header-h);
             z-index: 1000;
             display: flex; align-items: center;
             padding: 0 40px;
-            transition: 0.6s var(--ease-luxury);
+            transition: all 0.6s var(--ease-luxury);
         }
         .header.scrolled {
-            height: 60px;
+            height: 65px;
             background: rgba(5, 5, 5, 0.8);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(197, 160, 89, 0.1);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
         .header-inner { width: 100%; display: flex; justify-content: space-between; align-items: center; }
         
-        .logo { text-decoration: none; color: #fff; line-height: 1.2; }
-        .logo-name { font-size: 1.2rem; font-weight: 600; letter-spacing: 0.3em; display: block; }
-        .logo-en { font-family: var(--font-accent); font-size: 0.55rem; color: var(--color-gold); letter-spacing: 0.4em; }
+        .logo { text-decoration: none; color: #fff; line-height: 1.1; pointer-events: auto; }
+        .logo-name { font-size: 1.2rem; font-weight: 600; letter-spacing: 0.4em; display: block; }
+        .logo-sub { font-family: var(--font-accent); font-size: 0.55rem; color: var(--color-gold); letter-spacing: 0.5em; }
 
-        .nav-list { display: flex; list-style: none; gap: 25px; }
+        .nav-list { display: flex; list-style: none; gap: 30px; }
         .nav-link { 
             text-decoration: none; color: #fff; font-size: 0.7rem; 
-            font-family: var(--font-sans); letter-spacing: 0.2em; opacity: 0.4; transition: 0.4s;
+            font-family: var(--font-sans); letter-spacing: 0.2em; opacity: 0.35; transition: 0.4s;
             text-transform: uppercase;
         }
         .nav-link.active { opacity: 1; color: var(--color-gold); }
 
-        /* --- 背景スライド (クロスフェード) --- */
+        /* --- 2. ヒーロー背景 (クロスフェード) --- */
         .hero-slider { position: absolute; inset: 0; z-index: 1; }
         .hero-slider img {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
             opacity: 0; transform: scale(1.1);
-            transition: opacity 2.5s ease-in-out, transform 12s linear;
+            transition: opacity 3s ease-in-out, transform 12s linear;
         }
-        .hero-slider img.active { opacity: 0.45; transform: scale(1.0); z-index: 2; }
+        .hero-slider img.active { opacity: 0.4; transform: scale(1.0); z-index: 2; }
         .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 20%, #000 140%); z-index: 3; }
-        .hero-content { position: relative; z-index: 4; text-align: center; }
-        .hero-title { font-size: clamp(1.8rem, 8vw, 3.5rem); font-weight: 200; letter-spacing: 0.4em; line-height: 1.6; margin-bottom: 20px; }
+        .hero-content { position: relative; z-index: 4; text-align: center; padding: 0 20px; }
+        .hero-title { font-size: clamp(1.8rem, 8vw, 3.5rem); font-weight: 200; letter-spacing: 0.5em; line-height: 1.6; margin-bottom: 20px; }
 
-        /* --- お知らせセクション (Owner Only 管理) --- */
-        .news-container {
-            width: 90%; max-width: 800px;
-            background: var(--color-bg-layer);
-            padding: 40px;
-            border: 1px solid rgba(197, 160, 89, 0.1);
-        }
-        .news-list { list-style: none; }
-        .news-item {
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: 0.3s;
-        }
-        .news-item:last-child { border-bottom: none; }
-        .news-date { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.75rem; display: block; margin-bottom: 5px; }
-        .news-title { font-size: 1.1rem; font-weight: 400; margin-bottom: 8px; color: var(--color-ivory); }
-        .news-text { font-size: 0.85rem; color: var(--color-text-dim); line-height: 1.8; }
-
-        /* --- ギャラリー (レスポンシブ) --- */
+        /* --- 3. ギャラリー (動的生成) --- */
         .gallery-container {
             width: 100%; max-width: 1200px; padding: 0 40px;
-            display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 60px; align-items: center;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
         }
-        .item-visual { position: relative; overflow: hidden; background: #000; cursor: pointer; }
-        .item-visual img { width: 100%; display: block; transition: 1.5s var(--ease-luxury); filter: brightness(0.8); }
-        .item-visual:hover img, .item-visual.touch img { transform: scale(1.05); filter: brightness(1.0); }
-        .item-name { font-size: clamp(1.5rem, 4vw, 2.2rem); margin-bottom: 20px; font-weight: 400; }
-        .item-desc { font-size: 0.9rem; color: var(--color-text-dim); font-weight: 200; line-height: 2.2; }
+        .item-visual { position: relative; overflow: hidden; background: #000; box-shadow: 0 30px 60px rgba(0,0,0,0.6); cursor: pointer; }
+        .item-visual img { width: 100%; display: block; transition: 1.8s var(--ease-luxury); filter: brightness(0.85); }
+        .item-visual:hover img, .item-visual.active img { transform: scale(1.05); filter: brightness(1.1); }
+        
+        .item-info { padding-right: 20px; }
+        .item-num { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.75rem; margin-bottom: 10px; display: block; }
+        .item-name { font-size: clamp(1.5rem, 4vw, 2.2rem); margin-bottom: 25px; font-weight: 400; letter-spacing: 0.2em; }
+        .item-desc { font-size: 0.9rem; color: var(--color-text-dim); font-weight: 200; line-height: 2.4; margin-bottom: 15px; }
+        .item-exif { font-family: var(--font-sans); font-size: 0.65rem; color: var(--color-gold); opacity: 0.6; letter-spacing: 0.1em; }
 
-        /* --- プロフィール --- */
+        /* --- 4. お知らせページ (カードリスト) --- */
+        .news-box { width: 90%; max-width: 850px; background: var(--color-bg-layer); padding: 50px; border: 1px solid rgba(197, 160, 89, 0.12); }
+        .news-item { padding: 25px 0; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .news-item:last-child { border-bottom: none; }
+        .news-date { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.75rem; display: block; margin-bottom: 8px; }
+        .news-title { font-size: 1.15rem; font-weight: 400; margin-bottom: 10px; letter-spacing: 0.05em; }
+        .news-body { font-size: 0.85rem; color: var(--color-text-dim); line-height: 2.0; }
+
+        /* --- 5. プロフィール --- */
         .profile-card { max-width: 700px; text-align: center; padding: 0 30px; }
-        .profile-vision { font-size: clamp(0.9rem, 3vw, 1.1rem); margin: 30px 0; line-height: 2.5; }
-        .profile-meta { display: flex; justify-content: center; gap: 50px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; }
+        .profile-vision { font-size: clamp(0.95rem, 3vw, 1.1rem); margin: 40px 0; line-height: 2.8; word-break: keep-all; }
+        .profile-meta { display: flex; justify-content: center; gap: 60px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 50px; }
+        .meta-item dt { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.3em; margin-bottom: 10px; text-transform: uppercase; }
         .meta-item dd { font-size: 1.1rem; font-weight: 200; }
 
-        /* --- コンタクト --- */
-        .contact-box { width: 90%; max-width: 600px; background: var(--color-bg-layer); padding: 50px 30px; border: 1px solid rgba(197, 160, 89, 0.1); }
+        /* --- 6. コンタクト --- */
+        .contact-box { width: 90%; max-width: 600px; background: var(--color-bg-layer); padding: 60px 40px; border: 1px solid rgba(197, 160, 89, 0.12); }
+        .form-group { margin-bottom: 30px; text-align: left; }
+        .form-label { font-size: 0.65rem; color: var(--color-gold); letter-spacing: 0.2em; display: block; margin-bottom: 10px; }
         .form-input { 
             width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; 
-            padding: 12px 0; color: #fff; font-family: var(--font-serif); margin-bottom: 25px; transition: 0.4s;
+            padding: 12px 0; color: #fff; font-family: var(--font-serif); font-size: 1rem; transition: 0.4s;
         }
         .form-input:focus { outline: none; border-bottom: 1px solid var(--color-gold); }
         .btn-luxury {
-            width: 100%; padding: 18px; border: 1px solid var(--color-gold); background: transparent;
-            color: var(--color-gold); cursor: pointer; transition: 0.4s; letter-spacing: 0.3em;
+            width: 100%; padding: 20px; border: 1px solid var(--color-gold); background: transparent;
+            color: var(--color-gold); cursor: pointer; transition: 0.5s; letter-spacing: 0.4em; font-family: var(--font-sans);
         }
-        .btn-luxury:hover { background: var(--color-gold); color: #000; }
-
-        .sns-group { display: flex; justify-content: center; gap: 30px; margin-top: 40px; }
-        .sns-link { color: var(--color-text-dim); text-decoration: none; font-size: 0.75rem; transition: 0.3s; }
+        .btn-luxury:hover { background: var(--color-gold); color: #000; box-shadow: 0 0 30px rgba(197, 160, 89, 0.2); }
+        .sns-group { display: flex; justify-content: center; gap: 40px; margin-top: 50px; }
+        .sns-link { color: var(--color-text-dim); text-decoration: none; font-size: 0.8rem; letter-spacing: 0.2em; transition: 0.3s; }
         .sns-link:hover { color: var(--color-gold); }
 
-        /* --- アニメーション --- */
-        .reveal { opacity: 0; transform: translateY(30px); transition: 1.6s var(--ease-luxury); }
+        /* --- 7. アニメーション --- */
+        .reveal { opacity: 0; transform: translateY(35px); transition: 1.8s var(--ease-luxury); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* モバイル最適化 */
+        /* モバイル最適化 (1024px以下) */
         @media (max-width: 1024px) {
-            .gallery-container { grid-template-columns: 1fr; gap: 30px; text-align: center; padding: 0 20px; }
+            .gallery-container { grid-template-columns: 1fr; gap: 40px; text-align: center; padding: 0 25px; }
+            .item-visual { order: 1; }
+            .item-info { order: 2; padding: 0; }
             .header { padding: 0 20px; }
-            .profile-meta { flex-direction: column; gap: 20px; }
-            .news-container { padding: 25px; }
+            .nav-list { gap: 15px; }
+            .profile-meta { flex-direction: column; gap: 40px; }
+            .news-box { padding: 30px 20px; }
         }
     </style>
 </head>
@@ -168,13 +169,13 @@
         <div class="header-inner">
             <a href="#home" class="logo">
                 <span class="logo-name">田中 凛</span>
-                <span class="logo-en">RIN TANAKA GALLERY</span>
+                <span class="logo-sub">FINE ART PHOTOGRAPHY</span>
             </a>
             <nav>
                 <ul class="nav-list">
-                    <li><a href="#news" class="nav-link" data-section="news">News</a></li>
                     <li><a href="#gallery-root" class="nav-link" data-section="gallery">Gallery</a></li>
-                    <li><a href="#profile" class="nav-link" data-section="profile">Vision</a></li>
+                    <li><a href="#news" class="nav-link" data-section="news">News</a></li>
+                    <li><a href="#vision" class="nav-link" data-section="vision">Vision</a></li>
                     <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
                 </ul>
             </nav>
@@ -182,60 +183,75 @@
     </header>
 
     <main>
-        <section id="home" class="screen">
+        <section id="home" class="screen" data-section="home">
             <div class="hero-slider" id="heroSlider">
-                <img src="001_2232.jpg" class="active" alt="">
-                <img src="001_1943.jpg" alt="">
+                <img src="001_2232.jpg" class="active" alt="Main View 1">
+                <img src="001_1943.jpg" alt="Main View 2">
             </div>
             <div class="hero-overlay"></div>
             <div class="hero-content reveal">
                 <h1 class="hero-title">光を聴き、<br>静寂を刻む。</h1>
-                <p style="font-family: var(--font-accent); color: var(--color-gold); letter-spacing: 0.5em;">THE ARCHIVE OF SILENCE</p>
-            </div>
-        </section>
-
-        <section id="news" class="screen">
-            <div class="news-container reveal">
-                <h2 style="font-size: 1.5rem; margin-bottom: 30px; text-align: center; letter-spacing: 0.3em; font-weight: 200;">NEWS</h2>
-                <div id="news-list-root" class="news-list">
-                    </div>
+                <p style="font-family: var(--font-accent); color: var(--color-gold); letter-spacing: 0.6em; font-size: 0.85rem;">THE ARCHIVE OF SILENCE</p>
             </div>
         </section>
 
         <div id="gallery-root"></div>
 
-        <section id="profile" class="screen">
+        <section id="news" class="screen" data-section="news">
+            <div class="news-box reveal">
+                <h2 style="text-align: center; font-size: 1.5rem; margin-bottom: 40px; font-weight: 200; letter-spacing: 0.4em;">NEWS</h2>
+                <div id="news-list">
+                    </div>
+            </div>
+        </section>
+
+        <section id="vision" class="screen" data-section="vision">
             <div class="profile-card reveal">
-                <h2 style="font-size: 2rem; font-weight: 200; letter-spacing: 0.3em; margin-bottom: 20px;">田中 凛</h2>
+                <p class="logo-sub" style="margin-bottom: 25px;">Artist Statement</p>
+                <h2 style="font-size: 2.2rem; font-weight: 200; letter-spacing: 0.4em;">田中 凛</h2>
                 <div class="profile-vision">
                     <p>「記録」を越えて、その場の「湿度」を撮りたい。</p>
-                    <p style="font-size: 0.9rem; color: var(--color-text-dim); margin-top: 20px;">
+                    <p style="font-size: 0.95rem; color: var(--color-text-dim); margin-top: 30px; font-weight: 200;">
                         日常のノイズを削ぎ落とした先にある、本質的な静けさを追求しています。<br>
-                        Nikon Z 50IIと共に歩く時間は、世界との対話そのものです。
+                        Nikon Z 50IIと共に歩く時間は、世界との対話そのものです。<br>
+                        目に見える光だけでなく、その裏側にある感情までも閉じ込めること。<br>
+                        それが私の表現の軸です。
                     </p>
                 </div>
                 <dl class="profile-meta">
                     <div class="meta-item">
-                        <dt style="color: var(--color-gold); font-size: 0.6rem;">GEAR</dt>
+                        <dt>Camera Gear</dt>
                         <dd>Nikon Z 50II</dd>
                     </div>
                     <div class="meta-item">
-                        <dt style="color: var(--color-gold); font-size: 0.6rem;">BASE</dt>
+                        <dt>Base Region</dt>
                         <dd>Tokyo / Chiba</dd>
                     </div>
                 </dl>
             </div>
         </section>
 
-        <section id="contact" class="screen">
+        <section id="contact" class="screen" data-section="contact">
             <div class="contact-box reveal">
-                <h3 style="text-align: center; font-size: 1.4rem; margin-bottom: 30px; font-weight: 200;">CONTACT</h3>
+                <h3 style="text-align: center; font-size: 1.6rem; margin-bottom: 10px; font-weight: 200;">Contact</h3>
+                <p style="text-align: center; font-size: 0.7rem; color: var(--color-gold); margin-bottom: 50px; letter-spacing: 0.2em;">展示・撮影依頼・お問い合わせ</p>
+                
                 <form action="https://formspree.io/f/maqplpnr" method="POST">
-                    <input type="text" name="name" class="form-input" placeholder="NAME" required>
-                    <input type="email" name="email" class="form-input" placeholder="EMAIL" required>
-                    <textarea name="message" class="form-input" placeholder="MESSAGE" rows="3" required></textarea>
+                    <div class="form-group">
+                        <label class="form-label">名前 / NAME</label>
+                        <input type="text" name="name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">メールアドレス / EMAIL</label>
+                        <input type="email" name="email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">メッセージ / MESSAGE</label>
+                        <textarea name="message" class="form-input" rows="4" required></textarea>
+                    </div>
                     <button type="submit" class="btn-luxury">SEND MESSAGE</button>
                 </form>
+
                 <div class="sns-group">
                     <a href="https://www.instagram.com/7r11n_/" target="_blank" class="sns-link">INSTAGRAM</a>
                     <a href="https://x.com/cossrin" target="_blank" class="sns-link">X (TWITTER)</a>
@@ -244,80 +260,94 @@
         </section>
     </main>
 
+    <footer style="padding: 60px 0; text-align: center; font-size: 0.6rem; letter-spacing: 0.4em; opacity: 0.3; scroll-snap-align: end;">
+        &copy; 2026 RIN TANAKA PHOTOGRAPHY. ALL RIGHTS RESERVED.
+    </footer>
+
     <script>
         /* ==========================================
-           1. お知らせデータ管理 (ここを増やすだけでOK)
+           3 & 4. データ管理システム (ここを編集するだけ)
         ========================================== */
-        const NEWS_DATA = [
-            {
-                date: "2026.03.18",
-                title: "ポートフォリオサイトをリニューアルしました",
-                text: "より作品の世界観を伝えるため、デザインを一新。モバイル体験を大幅に向上させました。"
-            },
-            {
-                date: "2026.04.01",
-                title: "個展「静寂の淵」開催のお知らせ",
-                text: "都内ギャラリーにて、新作を含む15点を展示予定です。詳細は後日公開いたします。"
-            }
-        ];
-
-        /* ==========================================
-           2. ギャラリーデータ管理 (ここを増やすだけでOK)
-        ========================================== */
-        const GALLERY_DATA = [
+        
+        // 写真データ (JSON形式で追加可能)
+        const PHOTO_DATA = [
             {
                 src: "001_2232.jpg",
                 name: "静寂の淵",
-                desc: "寺院の回廊に落ちる光は、目に見えない時間の粒子を可視化させます。"
+                desc: "寺院の回廊に落ちる光は、目に見えない時間の粒子を可視化させます。音のない世界で、光だけが呼吸している。その気配を記録しました。",
+                exif: "Nikon Z 50II | f/2.8 | 1/125s | ISO 400"
             },
             {
                 src: "001_1943.jpg",
                 name: "都市の幾何学",
-                desc: "無機質な鉄とガラスが交差する瞬間。都会の喧騒の中に現れる均衡。"
+                desc: "無機質な鉄とガラスが交差する瞬間。都会の喧騒の中に現れる、完璧な均衡。人工物が放つ冷たい美しさの中に、わずかな情緒を探して。",
+                exif: "Nikon Z 50II | f/4.0 | 1/500s | ISO 100"
             }
         ];
 
-        /* --- 自動生成処理 --- */
-        const newsRoot = document.getElementById('news-list-root');
-        NEWS_DATA.forEach(item => {
-            newsRoot.innerHTML += `
-                <div class="news-item">
-                    <span class="news-date">${item.date}</span>
-                    <h4 class="news-title">${item.title}</h4>
-                    <p class="news-text">${item.text}</p>
-                </div>
-            `;
-        });
-
-        const galleryRoot = document.getElementById('gallery-root');
-        GALLERY_DATA.forEach((item, index) => {
-            galleryRoot.innerHTML += `
-                <section class="screen" data-section="gallery">
-                    <div class="gallery-container">
-                        <div class="item-visual reveal" onclick="this.classList.toggle('touch')">
-                            <img src="${item.src}" alt="${item.name}">
-                        </div>
-                        <div class="item-info reveal">
-                            <span style="color:var(--color-gold); font-family:var(--font-accent); font-size:0.7rem;">0${index+1} / ARCHIVE</span>
-                            <h3 class="item-name">${item.name}</h3>
-                            <p class="item-desc">${item.desc}</p>
-                        </div>
-                    </div>
-                </section>
-            `;
-        });
+        // お知らせデータ (JSON形式で追加可能)
+        const NEWS_DATA = [
+            {
+                date: "2026.03.18",
+                title: "ポートフォリオサイトをリニューアルしました",
+                body: "より写真の世界観を深くお伝えするため、デザインと機能を全面的にアップデートいたしました。今後の展示情報などもこちらで発信いたします。"
+            },
+            {
+                date: "2026.04.10",
+                title: "個展「刻まれる光」開催のお知らせ",
+                body: "都内ギャラリーにて、新作を含む12枚の作品を展示いたします。皆様のご来場を心よりお待ちしております。詳細はContactよりお問い合わせください。"
+            }
+        ];
 
         /* ==========================================
-           背景スライド & インタラクション制御
+           動的レンダリング & インタラクション
         ========================================== */
+
+        // ギャラリー生成
+        const galleryRoot = document.getElementById('gallery-root');
+        PHOTO_DATA.forEach((item, index) => {
+            const section = document.createElement('section');
+            section.className = 'screen';
+            section.setAttribute('data-section', 'gallery');
+            section.innerHTML = `
+                <div class="gallery-container">
+                    <div class="item-visual reveal" onclick="this.classList.toggle('active')">
+                        <img src="${item.src}" alt="${item.name}">
+                    </div>
+                    <div class="item-info reveal">
+                        <span class="item-num">Archive 0${index + 1}</span>
+                        <h3 class="item-name">${item.name}</h3>
+                        <p class="item-desc">${item.desc}</p>
+                        <p class="item-exif">${item.exif}</p>
+                    </div>
+                </div>
+            `;
+            galleryRoot.appendChild(section);
+        });
+
+        // お知らせ生成
+        const newsList = document.getElementById('news-list');
+        NEWS_DATA.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'news-item';
+            div.innerHTML = `
+                <span class="news-date">${item.date}</span>
+                <h4 class="news-title">${item.title}</h4>
+                <p class="news-body">${item.body}</p>
+            `;
+            newsList.appendChild(div);
+        });
+
+        // 背景スライドショー (クロスフェード)
         const heroSlides = document.querySelectorAll('#heroSlider img');
         let currentSlide = 0;
         setInterval(() => {
             heroSlides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % heroSlides.length;
             heroSlides[currentSlide].classList.add('active');
-        }, 5500);
+        }, 6000);
 
+        // スクロール検知 & ナビゲーション連動
         const header = document.getElementById('mainHeader');
         const navLinks = document.querySelectorAll('.nav-link');
         const sections = document.querySelectorAll('section, .screen');
@@ -326,19 +356,24 @@
             header.classList.toggle('scrolled', window.scrollY > 50);
         });
 
+        const observerOptions = { threshold: 0.5 };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
+                    // アニメーション発火
                     entry.target.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
-                    const activeId = entry.target.getAttribute('data-section') || entry.target.id;
+                    
+                    // ナビ強調
+                    const sectionId = entry.target.getAttribute('data-section') || entry.target.id;
                     navLinks.forEach(link => {
-                        link.classList.toggle('active', link.getAttribute('data-section') === activeId);
+                        link.classList.toggle('active', link.getAttribute('data-section') === sectionId);
                     });
                 }
             });
-        }, { threshold: 0.5 });
+        }, observerOptions);
 
         sections.forEach(sec => observer.observe(sec));
+
     </script>
 </body>
 </html>
