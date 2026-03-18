@@ -6,10 +6,14 @@
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#050505">
 
     <title>田中 凛 | Rin Tanaka Portfolio</title>
     
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Noto+Serif+JP:wght@200;400;600&family=Inter:wght@200;400&display=swap" rel="stylesheet">
@@ -32,7 +36,7 @@
 
         /* --- Base Layout --- */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+        html { scroll-behavior: smooth; scroll-snap-type: y mandatory; overflow-x: hidden; }
         body {
             background-color: var(--color-bg);
             color: var(--color-ivory);
@@ -50,20 +54,19 @@
             overflow: hidden;
         }
 
-        /* --- Header (Stable & Fixed) --- */
+        /* --- Header (Mobile Stable) --- */
         .header {
             position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h);
             z-index: 1000; display: flex; align-items: center; padding: 0 40px;
             transition: all 0.6s var(--ease-luxury);
-            background: transparent;
         }
         .header.scrolled {
             height: 65px; background: rgba(5, 5, 5, 0.85);
             backdrop-filter: blur(20px); border-bottom: 1px solid rgba(197, 160, 89, 0.15);
         }
         .header-inner { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-        .logo { text-decoration: none; color: #fff; display: flex; flex-direction: column; min-width: 120px; }
-        .logo-name { font-size: 1.25rem; font-weight: 600; letter-spacing: 0.4em; line-height: 1.2; }
+        .logo { text-decoration: none; color: #fff; display: flex; flex-direction: column; }
+        .logo-name { font-size: 1.2rem; font-weight: 600; letter-spacing: 0.4em; line-height: 1.2; }
         .logo-sub { font-family: var(--font-accent); font-size: 0.55rem; color: var(--color-gold); letter-spacing: 0.5em; margin-top: 4px; }
 
         .nav-list { display: flex; list-style: none; gap: 30px; }
@@ -82,8 +85,8 @@
         }
         .hero-slider img.active { opacity: 0.45; transform: scale(1.0); z-index: 2; }
         .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 20%, #000 140%); z-index: 3; }
-        .hero-content { position: relative; z-index: 4; text-align: center; width: 100%; padding: 0 20px; }
-        .hero-title { font-size: clamp(1.5rem, 7vw, 3rem); font-weight: 200; letter-spacing: 0.5em; line-height: 1.8; margin-bottom: 20px; }
+        .hero-content { position: relative; z-index: 4; text-align: center; }
+        .hero-title { font-size: clamp(1.4rem, 6vw, 3rem); font-weight: 200; letter-spacing: 0.5em; line-height: 1.8; margin-bottom: 20px; }
 
         /* --- Gallery Section --- */
         .gallery-container {
@@ -95,10 +98,10 @@
         .item-visual:hover img { transform: scale(1.05); filter: brightness(1.1); }
         .item-info { padding-right: 20px; }
         .item-num { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.65rem; margin-bottom: 10px; display: block; }
-        .item-name { font-size: clamp(1.4rem, 4vw, 2.2rem); margin-bottom: 20px; font-weight: 400; letter-spacing: 0.2em; }
+        .item-name { font-size: clamp(1.3rem, 4vw, 2.2rem); margin-bottom: 20px; font-weight: 400; letter-spacing: 0.2em; }
         .item-desc { font-size: 0.85rem; color: var(--color-text-dim); font-weight: 200; line-height: 2.2; }
 
-        /* --- Modal --- */
+        /* --- Modal (Responsive) --- */
         .modal {
             position: fixed; inset: 0; background: rgba(5,5,5,0.98); z-index: 2000;
             display: flex; opacity: 0; pointer-events: none; transition: 0.6s var(--ease-luxury);
@@ -107,18 +110,11 @@
         .modal-inner { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; cursor: pointer; }
         .modal-img { max-width: 90%; max-height: 70vh; object-fit: contain; pointer-events: none; }
         .modal-info { text-align: center; margin-top: 30px; max-width: 700px; pointer-events: none; }
-        .modal-title { font-size: 1.3rem; letter-spacing: 0.2em; margin-bottom: 10px; }
+        .modal-title { font-size: 1.2rem; letter-spacing: 0.2em; margin-bottom: 10px; }
         .modal-exif { font-family: var(--font-sans); font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.7; }
 
-        /* --- News Section --- */
-        .news-box { width: 90%; max-width: 800px; background: var(--color-bg-layer); padding: 50px 40px; border: 1px solid rgba(197, 160, 89, 0.12); }
-        .news-item { padding: 25px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .news-date { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.7rem; display: block; margin-bottom: 8px; }
-        .news-title { font-size: 1.05rem; font-weight: 400; margin-bottom: 10px; }
-        .news-body { font-size: 0.85rem; color: var(--color-text-dim); line-height: 2.0; }
-
-        /* --- Profile Section --- */
-        .profile-card { max-width: 750px; text-align: center; padding: 0 30px; width: 100%; }
+        /* --- Vision Section --- */
+        .profile-card { max-width: 750px; text-align: center; padding: 0 30px; }
         .profile-vision { font-size: 1.15rem; margin: 40px 0; line-height: 2.8; word-break: keep-all; }
         .profile-meta { display: flex; justify-content: center; gap: 60px; margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px; }
         .meta-item dt { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.3em; margin-bottom: 10px; text-transform: uppercase; }
@@ -131,75 +127,30 @@
         .form-input { 
             width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; 
             padding: 12px 0; color: #fff; font-family: var(--font-serif); font-size: 1rem; transition: 0.4s;
-            border-radius: 0; /* iOS fix */
+            border-radius: 0;
         }
-        .form-input:focus { outline: none; border-bottom: 1px solid var(--color-gold); }
         .btn-luxury {
             width: 100%; padding: 20px; border: 1px solid var(--color-gold); background: transparent;
             color: var(--color-gold); cursor: pointer; transition: 0.5s; letter-spacing: 0.4em; font-family: var(--font-sans);
         }
-        .sns-group { display: flex; justify-content: center; gap: 40px; margin-top: 50px; }
-        .sns-link { color: var(--color-text-dim); transition: 0.3s; }
 
-        /* --- Animation Utilities --- */
+        /* --- Animation --- */
         .reveal { opacity: 0; transform: translateY(30px); transition: 1.8s var(--ease-luxury); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* ============================================================
-           MOBILE OPTIMIZATION (375px - 480px)
-        ============================================================ */
+        /* --- Mobile Optimization (375-480px) --- */
         @media screen and (max-width: 480px) {
             :root { --header-h: 70px; }
-            
-            /* Header Logo Stability */
-            .header { padding: 0 20px; height: var(--header-h); }
+            .header { padding: 0 20px; }
             .logo-name { font-size: 1.1rem; letter-spacing: 0.3em; }
-            .logo-sub { font-size: 0.5rem; letter-spacing: 0.3em; white-space: nowrap; }
-            .nav-list { gap: 12px; }
-            .nav-link { font-size: 0.6rem; letter-spacing: 0.1em; }
-
-            /* Hero Section Clipping Fix */
-            .hero-title { font-size: 1.3rem; letter-spacing: 0.35em; padding: 0 10px; }
-            .hero-content p { font-size: 0.65rem; }
-
-            /* Gallery Clipping Fix */
-            .gallery-container { grid-template-columns: 1fr; gap: 25px; padding: 0 25px; align-content: center; }
-            .item-visual { max-width: 100%; margin: 0 auto; box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+            .nav-list { gap: 15px; }
+            .hero-title { font-size: 1.3rem; letter-spacing: 0.3em; }
+            .gallery-container { grid-template-columns: 1fr; gap: 30px; padding: 0 25px; }
             .item-info { padding: 0; text-align: center; }
-            .item-name { font-size: 1.3rem; margin-bottom: 12px; }
-            .item-desc { font-size: 0.75rem; line-height: 1.8; padding: 0 5px; }
-
-            /* Modal Scaling Fix */
-            .modal-inner { padding: 15px; }
-            .modal-img { max-height: 60vh; width: auto; max-width: 100%; }
-            .modal-title { font-size: 1.1rem; }
-            .modal-info { margin-top: 20px; width: 100%; }
-
-            /* Profile Clipping Fix */
-            .profile-card { padding: 0 20px; }
-            .profile-vision { font-size: 0.95rem; margin: 25px 0; line-height: 2.4; }
-            .profile-vision p:last-child { font-size: 0.75rem; margin-top: 20px; }
-            .profile-meta { flex-direction: column; gap: 20px; margin-top: 30px; padding-top: 30px; }
-            .meta-item dd { font-size: 1rem; }
-
-            /* News Section Fix */
-            .news-box { padding: 35px 20px; width: 92%; }
-            .news-title { font-size: 0.95rem; }
-            .news-body { font-size: 0.75rem; }
-
-            /* Contact Form Fix */
-            .contact-box { padding: 40px 25px; width: 92%; }
-            .btn-luxury { padding: 16px; font-size: 0.75rem; }
-            .sns-group { margin-top: 35px; gap: 30px; }
-
-            /* Global Reveal Adjustment */
-            .reveal { transform: translateY(20px); }
-        }
-
-        /* Prevent horizontal scroll on small devices */
-        @media screen and (max-width: 374px) {
-            .logo-name { font-size: 1rem; }
-            .nav-list { gap: 8px; }
+            .profile-vision { font-size: 0.95rem; line-height: 2.4; }
+            .profile-meta { flex-direction: column; gap: 30px; }
+            .modal-inner { padding: 20px; }
+            .modal-img { max-height: 60vh; }
         }
     </style>
 </head>
@@ -233,26 +184,18 @@
 
         <div id="gallery-root"></div>
 
-        <section id="news" class="screen" data-section="news">
-            <div class="news-box reveal">
-                <h2 style="text-align: center; font-size: 1.4rem; margin-bottom: 30px; font-weight: 200; letter-spacing: 0.4em;">NEWS</h2>
-                <div id="news-list"></div>
-            </div>
-        </section>
-
         <section id="vision" class="screen" data-section="vision">
             <div class="profile-card reveal">
-                <p class="logo-sub" style="margin-bottom: 15px; font-size: 0.6rem;">Concept</p>
-                <h2 style="font-size: 2rem; font-weight: 200; letter-spacing: 0.4em; margin-bottom: 5px;">田中 凛</h2>
-                <p style="font-family: var(--font-accent); color: var(--color-gold); font-size: 0.7rem; letter-spacing: 0.3em; margin-bottom: 30px;">RIN TANAKA</p>
+                <p class="logo-sub" style="margin-bottom: 25px; font-size: 0.65rem;">Concept</p>
+                <h2 style="font-size: 2.2rem; font-weight: 200; letter-spacing: 0.4em; margin-bottom: 10px;">田中 凛</h2>
+                <p style="font-family: var(--font-accent); color: var(--color-gold); font-size: 0.7rem; letter-spacing: 0.3em; margin-bottom: 40px;">RIN TANAKA</p>
                 
                 <div class="profile-vision">
                     <p>記憶に残らない、<br>日常の一片を掬い上げる。</p>
-                    <p style="color: var(--color-text-dim); font-weight: 200; max-width: 550px; margin-left: auto; margin-right: auto;">
+                    <p style="font-size: 0.9rem; color: var(--color-text-dim); margin-top: 35px; font-weight: 200; line-height: 2.6; max-width: 550px; margin-left: auto; margin-right: auto;">
                         特別ではない今日、意識の端を通り過ぎていく名もなき景色。<br>
-                        一度忘れてしまえば二度と出会うことはありません。<br>
-                        そんな「日常の断片」を写真に留め、<br>
-                        過ぎ去る時間の中に静かな意味を見出したい。
+                        それらは一度忘れてしまえば、二度と出会うことはありません。<br>
+                        そんな「日常の断片」を写真に留め、過ぎゆく時間の中に静かな意味を見出したいと考えています。
                     </p>
                 </div>
 
@@ -266,16 +209,16 @@
 
         <section id="contact" class="screen" data-section="contact">
             <div class="contact-box reveal">
-                <h3 style="text-align: center; font-size: 1.4rem; margin-bottom: 30px; font-weight: 200; letter-spacing: 0.3em;">CONTACT</h3>
+                <h3 style="text-align: center; font-size: 1.5rem; margin-bottom: 40px; font-weight: 200; letter-spacing: 0.3em;">CONTACT</h3>
                 <form action="https://formspree.io/f/maqplpnr" method="POST">
                     <div class="form-group"><label class="form-label">NAME</label><input type="text" name="name" class="form-input" required></div>
                     <div class="form-group"><label class="form-label">EMAIL</label><input type="email" name="email" class="form-input" required></div>
                     <div class="form-group"><label class="form-label">MESSAGE</label><textarea name="message" class="form-input" rows="3" required></textarea></div>
                     <button type="submit" class="btn-luxury">SEND MESSAGE</button>
                 </form>
-                <div class="sns-group">
-                    <a href="https://www.instagram.com/7r11n_/?next=%2F" target="_blank" class="sns-link" aria-label="Instagram"><i data-lucide="instagram"></i></a>
-                    <a href="https://x.com/cossrin" target="_blank" class="sns-link" aria-label="X (Twitter)"><i data-lucide="twitter"></i></a>
+                <div style="display: flex; justify-content: center; gap: 40px; margin-top: 50px;">
+                    <a href="https://www.instagram.com/7r11n_/" target="_blank" style="color: var(--color-text-dim);"><i data-lucide="instagram"></i></a>
+                    <a href="https://x.com/cossrin" target="_blank" style="color: var(--color-text-dim);"><i data-lucide="twitter"></i></a>
                 </div>
             </div>
         </section>
@@ -295,15 +238,12 @@
         const DATA_CONFIG = {
             heroImages: ["001_1923.jpg", "001_2232.jpg", "001_2199.jpg"],
             photos: [
-                { src: "001_2232.jpg", name: "境界の静寂", desc: "誰かがそこにいた証。時間の中に溶け込んでいる祈りの形。", exif: "Nikon Z 50II | f/4.0 | 1/125s" },
-                { src: "001_1943.jpg", name: "都市の筆致", desc: "移動中にふと目が合った壁画。都市のノイズの中に現れる色彩の衝突。", exif: "Nikon Z 50II | f/2.8 | 1/500s" },
-                { src: "001_1923.jpg", name: "構造の夜", desc: "夜の立体駐車場。無機質な空間に潜む、幾何学的な美しさ。", exif: "Nikon Z 50II | f/4.0 | 1/60s" },
+                { src: "001_2232.jpg", name: "境界の静寂", desc: "時間の中に溶け込んでいる祈りの形。記憶に残らなくても、確かに存在する。", exif: "Nikon Z 50II | f/4.0 | 1/125s" },
+                { src: "001_1943.jpg", name: "都市の筆致", desc: "移動中にふと目が合った壁画。ノイズの中に現れる色彩の衝突。", exif: "Nikon Z 50II | f/2.8 | 1/500s" },
+                { src: "001_1923.jpg", name: "構造の夜", desc: "無機質な鉄骨と光。夜の空間に潜む幾何学的な美しさ。", exif: "Nikon Z 50II | f/4.0 | 1/60s" },
                 { src: "001_2199.jpg", name: "森の脈動", desc: "名前も知らない石畳。木漏れ日が作る影は、刻一刻と形を変える。", exif: "Nikon Z 50II | f/4.5 | 1/160s" },
                 { src: "001_1887.jpg", name: "夕暮れの残像", desc: "放課後のベンチに置かれた黄色。主が去った後の微かな温度。", exif: "Nikon Z 50II | f/1.8 | 1/2000s" },
                 { src: "001_1007.jpg", name: "柔らかな同居", desc: "窓辺に並んだ置物たち。日常を彩る、小さくとも確かな愛着。", exif: "Nikon Z 50II | f/2.8 | 1/100s" }
-            ],
-            news: [
-                { date: "2026.03.17", title: "ポートフォリオサイト開設", body: "記憶に残らない日常の一片を綴る、アーカイブを公開しました。" }
             ]
         };
 
@@ -327,11 +267,6 @@
                 </section>`;
         });
 
-        const newsList = document.getElementById('news-list');
-        DATA_CONFIG.news.forEach(item => {
-            newsList.innerHTML += `<div class="news-item"><span class="news-date">${item.date}</span><h4 class="news-title">${item.title}</h4><p class="news-body">${item.body}</p></div>`;
-        });
-
         const modal = document.getElementById('galleryModal');
         function openModal(idx) {
             const data = DATA_CONFIG.photos[idx];
@@ -341,11 +276,9 @@
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-        document.getElementById('modalOverlay').addEventListener('click', (e) => {
-            if (e.target.id === 'modalOverlay' || e.target.classList.contains('modal-inner')) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
+        document.getElementById('modalOverlay').addEventListener('click', () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
         });
 
         let currentSlide = 0;
@@ -357,21 +290,13 @@
         }, 6000);
 
         const header = document.getElementById('mainHeader');
-        const navLinks = document.querySelectorAll('.nav-link');
         const sections = document.querySelectorAll('section, .screen');
-
-        window.addEventListener('scroll', () => {
-            header.classList.toggle('scrolled', window.scrollY > 20);
-        });
+        window.addEventListener('scroll', () => header.classList.toggle('scrolled', window.scrollY > 50));
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
-                    const id = entry.target.getAttribute('data-section') || entry.target.id;
-                    navLinks.forEach(link => {
-                        link.classList.toggle('active', link.getAttribute('data-section') === id);
-                    });
                 }
             });
         }, { threshold: 0.4 });
