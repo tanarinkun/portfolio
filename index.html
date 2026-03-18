@@ -16,7 +16,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* --- Design Tokens --- */
+        /* --- デザイントークン --- */
         :root {
             --color-bg: #050505;
             --color-bg-layer: #0c0c0c;
@@ -30,14 +30,9 @@
             --header-h: 80px;
         }
 
-        /* --- Global Layout & Scroll Snap --- */
+        /* --- 基本レイアウト --- */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        html { 
-            scroll-behavior: smooth;
-            scroll-snap-type: y mandatory;
-        }
-        
+        html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
         body {
             background-color: var(--color-bg);
             color: var(--color-ivory);
@@ -48,129 +43,117 @@
         }
 
         .screen {
-            height: 100vh;
-            width: 100%;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            height: 100vh; width: 100%;
+            scroll-snap-align: start; scroll-snap-stop: always;
+            position: relative; display: flex; align-items: center; justify-content: center;
             overflow: hidden;
         }
 
-        /* --- 1. Header (Floating & Glass) --- */
+        /* --- ヘッダー (ぼかし・影・固定) --- */
         .header {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: var(--header-h);
-            z-index: 1000;
-            display: flex; align-items: center;
-            padding: 0 40px;
+            position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h);
+            z-index: 1000; display: flex; align-items: center; padding: 0 40px;
             transition: all 0.6s var(--ease-luxury);
         }
         .header.scrolled {
             height: 65px;
-            background: rgba(5, 5, 5, 0.7);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+            background: rgba(5, 5, 5, 0.75);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
             box-shadow: 0 4px 30px rgba(0,0,0,0.5);
         }
         .header-inner { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-        
-        .logo { text-decoration: none; color: #fff; line-height: 1.1; cursor: pointer; }
-        .logo-name { font-size: 1.25rem; font-weight: 600; letter-spacing: 0.4em; display: block; }
-        .logo-sub { font-family: var(--font-accent); font-size: 0.55rem; color: var(--color-gold); letter-spacing: 0.5em; }
+        .logo { text-decoration: none; color: #fff; cursor: pointer; }
+        .logo-name { font-size: 1.2rem; font-weight: 600; letter-spacing: 0.4em; display: block; }
+        .logo-sub { font-family: var(--font-accent); font-size: 0.5rem; color: var(--color-gold); letter-spacing: 0.5em; }
 
         .nav-list { display: flex; list-style: none; gap: 30px; }
         .nav-link { 
-            text-decoration: none; color: #fff; font-size: 0.75rem; 
+            text-decoration: none; color: #fff; font-size: 0.7rem; 
             font-family: var(--font-sans); letter-spacing: 0.2em; opacity: 0.35; transition: 0.4s;
             text-transform: uppercase;
         }
         .nav-link.active { opacity: 1; color: var(--color-gold); }
 
-        /* --- 2. Hero Slider (Smooth Crossfade) --- */
+        /* --- ヒーロー背景 (スムーズクロスフェード) --- */
         .hero-slider { position: absolute; inset: 0; z-index: 1; }
         .hero-slider img {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-            opacity: 0; transform: scale(1.1);
-            transition: opacity 3s ease-in-out, transform 15s linear;
+            opacity: 0; transform: scale(1.05);
+            transition: opacity 3s ease-in-out, transform 12s linear;
         }
-        .hero-slider img.active { opacity: 0.5; transform: scale(1.0); z-index: 2; }
-        .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 20%, #000 140%); z-index: 3; }
-        .hero-content { position: relative; z-index: 4; text-align: center; padding: 0 20px; }
-        .hero-title { font-size: clamp(1.8rem, 8vw, 3.5rem); font-weight: 200; letter-spacing: 0.5em; line-height: 1.6; margin-bottom: 20px; }
+        .hero-slider img.active { opacity: 0.45; transform: scale(1.0); z-index: 2; }
+        .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 10%, #000 150%); z-index: 3; }
+        .hero-content { position: relative; z-index: 4; text-align: center; }
+        .hero-title { font-size: clamp(1.6rem, 7vw, 3.2rem); font-weight: 200; letter-spacing: 0.6em; line-height: 1.8; margin-bottom: 20px; }
 
-        /* --- 3. Gallery & Modal --- */
+        /* --- ギャラリー & モーダル --- */
         .gallery-container {
             width: 100%; max-width: 1200px; padding: 0 40px;
-            display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; align-items: center;
+            display: grid; grid-template-columns: 1fr 1.1fr; gap: 60px; align-items: center;
         }
-        .item-visual { position: relative; overflow: hidden; background: #000; box-shadow: 0 30px 60px rgba(0,0,0,0.6); cursor: pointer; }
-        .item-visual img { width: 100%; display: block; transition: 1.5s var(--ease-luxury); filter: brightness(0.85); }
-        .item-visual:hover img { transform: scale(1.05); filter: brightness(1.1); }
+        .item-visual { position: relative; overflow: hidden; background: #000; box-shadow: 0 25px 50px rgba(0,0,0,0.6); cursor: pointer; }
+        .item-visual img { width: 100%; display: block; transition: 1.2s var(--ease-luxury); filter: brightness(0.85); }
+        .item-visual:hover img { transform: scale(1.05); filter: brightness(1.05); }
         
         .item-info { padding-right: 20px; }
         .item-num { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.7rem; margin-bottom: 10px; display: block; }
-        .item-name { font-size: clamp(1.4rem, 4vw, 2.2rem); margin-bottom: 20px; font-weight: 400; letter-spacing: 0.2em; }
-        .item-desc { font-size: 0.9rem; color: var(--color-text-dim); font-weight: 200; line-height: 2.2; }
+        .item-name { font-size: clamp(1.3rem, 4vw, 2rem); margin-bottom: 20px; font-weight: 400; letter-spacing: 0.2em; }
+        .item-desc { font-size: 0.85rem; color: var(--color-text-dim); font-weight: 200; line-height: 2.2; }
 
-        /* Fullscreen Modal */
         .modal {
             position: fixed; inset: 0; background: rgba(5,5,5,0.98); z-index: 2000;
-            display: flex; opacity: 0; pointer-events: none; transition: 0.6s var(--ease-luxury);
+            display: flex; opacity: 0; pointer-events: none; transition: 0.5s var(--ease-luxury);
         }
         .modal.active { opacity: 1; pointer-events: auto; }
-        .modal-inner { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; }
-        .modal-img { max-width: 90%; max-height: 75vh; object-fit: contain; }
-        .modal-info { text-align: center; margin-top: 30px; max-width: 700px; }
-        .modal-title { font-size: 1.4rem; letter-spacing: 0.2em; margin-bottom: 10px; }
-        .modal-exif { font-family: var(--font-sans); font-size: 0.65rem; color: var(--color-gold); letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.7; }
+        .modal-inner { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; cursor: pointer; }
+        .modal-img { max-width: 90%; max-height: 70vh; object-fit: contain; pointer-events: none; }
+        .modal-info { text-align: center; margin-top: 30px; max-width: 700px; pointer-events: none; }
+        .modal-title { font-size: 1.2rem; letter-spacing: 0.2em; margin-bottom: 8px; }
+        .modal-exif { font-family: var(--font-sans); font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.8; }
 
-        /* --- 4. News --- */
-        .news-box { width: 90%; max-width: 800px; background: var(--color-bg-layer); padding: 50px 40px; border: 1px solid rgba(197, 160, 89, 0.12); }
+        /* --- お知らせ --- */
+        .news-box { width: 90%; max-width: 800px; background: var(--color-bg-layer); padding: 50px 40px; border: 1px solid rgba(197, 160, 89, 0.15); }
         .news-item { padding: 25px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .news-item:last-child { border-bottom: none; }
         .news-date { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.75rem; display: block; margin-bottom: 8px; }
-        .news-title { font-size: 1.1rem; font-weight: 400; margin-bottom: 10px; }
-        .news-body { font-size: 0.85rem; color: var(--color-text-dim); line-height: 2.0; }
+        .news-title { font-size: 1rem; font-weight: 400; margin-bottom: 8px; }
+        .news-body { font-size: 0.8rem; color: var(--color-text-dim); line-height: 2.0; }
 
-        /* --- 5. Profile --- */
+        /* --- プロフィール --- */
         .profile-card { max-width: 700px; text-align: center; padding: 0 30px; }
-        .profile-vision { font-size: clamp(0.9rem, 3vw, 1.1rem); margin: 40px 0; line-height: 2.6; word-break: keep-all; }
         .profile-meta { display: flex; justify-content: center; gap: 60px; margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px; }
-        .meta-item dt { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.3em; margin-bottom: 10px; text-transform: uppercase; }
+        .meta-item dt { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.3em; margin-bottom: 8px; }
         .meta-item dd { font-size: 1.1rem; font-weight: 200; }
 
-        /* --- 6. Contact & SNS --- */
-        .contact-box { width: 90%; max-width: 600px; background: var(--color-bg-layer); padding: 60px 40px; border: 1px solid rgba(197, 160, 89, 0.12); }
+        /* --- コンタクト --- */
+        .contact-box { width: 90%; max-width: 600px; background: var(--color-bg-layer); padding: 50px 40px; border: 1px solid rgba(197, 160, 89, 0.12); }
         .form-group { margin-bottom: 25px; text-align: left; }
-        .form-label { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.2em; display: block; margin-bottom: 10px; }
+        .form-label { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.2em; display: block; margin-bottom: 8px; }
         .form-input { 
             width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; 
-            padding: 12px 0; color: #fff; font-family: var(--font-serif); font-size: 1rem; transition: 0.4s;
+            padding: 10px 0; color: #fff; font-family: var(--font-serif); font-size: 1rem; transition: 0.4s;
         }
         .form-input:focus { outline: none; border-bottom: 1px solid var(--color-gold); }
         .btn-luxury {
-            width: 100%; padding: 20px; border: 1px solid var(--color-gold); background: transparent;
-            color: var(--color-gold); cursor: pointer; transition: 0.5s; letter-spacing: 0.4em; font-family: var(--font-sans);
+            width: 100%; padding: 18px; border: 1px solid var(--color-gold); background: transparent;
+            color: var(--color-gold); cursor: pointer; transition: 0.5s; letter-spacing: 0.3em; font-family: var(--font-sans); font-size: 0.8rem;
         }
-        .btn-luxury:hover { background: var(--color-gold); color: #000; box-shadow: 0 0 30px rgba(197, 160, 89, 0.2); }
-        
-        .sns-group { display: flex; justify-content: center; gap: 40px; margin-top: 50px; }
-        .sns-link { color: var(--color-text-dim); transition: 0.3s; display: flex; align-items: center; }
+        .btn-luxury:hover { background: var(--color-gold); color: #000; }
+        .sns-group { display: flex; justify-content: center; gap: 40px; margin-top: 40px; }
+        .sns-link { color: var(--color-text-dim); transition: 0.3s; }
         .sns-link:hover { color: var(--color-gold); transform: translateY(-3px); }
 
         /* --- Animations --- */
-        .reveal { opacity: 0; transform: translateY(30px); transition: 1.8s var(--ease-luxury); }
+        .reveal { opacity: 0; transform: translateY(20px); transition: 1.5s var(--ease-luxury); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         /* Mobile Adjustments */
         @media (max-width: 1024px) {
-            .gallery-container { grid-template-columns: 1fr; gap: 40px; text-align: center; padding: 0 25px; }
+            .gallery-container { grid-template-columns: 1fr; gap: 30px; text-align: center; }
             .header { padding: 0 20px; }
             .nav-list { gap: 15px; }
-            .profile-meta { flex-direction: column; gap: 40px; }
+            .profile-meta { flex-direction: column; gap: 30px; }
             .modal-inner { padding: 20px; }
         }
     </style>
@@ -196,12 +179,11 @@
 
     <main>
         <section id="home" class="screen" data-section="home">
-            <div class="hero-slider" id="heroSlider">
-                </div>
+            <div class="hero-slider" id="heroSlider"></div>
             <div class="hero-overlay"></div>
             <div class="hero-content reveal">
                 <h1 class="hero-title">光を聴き、<br>静寂を刻む。</h1>
-                <p style="font-family: var(--font-accent); color: var(--color-gold); letter-spacing: 0.6em; font-size: 0.85rem;">THE ARCHIVE OF SILENCE</p>
+                <p style="font-family: var(--font-accent); color: var(--color-gold); letter-spacing: 0.5em; font-size: 0.75rem;">THE ARCHIVE OF SILENCE</p>
             </div>
         </section>
 
@@ -209,61 +191,37 @@
 
         <section id="news" class="screen" data-section="news">
             <div class="news-box reveal">
-                <h2 style="text-align: center; font-size: 1.5rem; margin-bottom: 40px; font-weight: 200; letter-spacing: 0.4em;">NEWS</h2>
+                <h2 style="text-align: center; font-size: 1.4rem; margin-bottom: 30px; font-weight: 200; letter-spacing: 0.3em;">NEWS</h2>
                 <div id="news-list"></div>
             </div>
         </section>
 
         <section id="vision" class="screen" data-section="vision">
             <div class="profile-card reveal">
-                <p class="logo-sub" style="margin-bottom: 25px;">Artist Statement</p>
-                <h2 style="font-size: 2.2rem; font-weight: 200; letter-spacing: 0.4em;">田中 凛</h2>
-                <div class="profile-vision">
-                    <p>「記録」を越えて、その場の「湿度」を撮りたい。</p>
-                    <p style="font-size: 0.95rem; color: var(--color-text-dim); margin-top: 30px; font-weight: 200;">
-                        日常のノイズを削ぎ落とした先にある、本質的な静けさを追求しています。<br>
-                        目に見える光だけでなく、その裏側にある感情までも閉じ込めること。<br>
-                        カメラを通して、世界と静かに対話する時間を大切にしています。
-                    </p>
-                </div>
+                <h2 style="font-size: 2rem; font-weight: 200; letter-spacing: 0.4em; margin-bottom: 30px;">田中 凛</h2>
+                <p style="font-size: 0.9rem; color: var(--color-text-dim); line-height: 2.4;">
+                    日常に潜む「湿度」と「静寂」を、Nikon Z 50IIで切り取ります。<br>
+                    目に見えるものだけでなく、その場の気配までを一枚の画に閉じ込めること。<br>
+                    東京と千葉を拠点に、光の対話を続けています。
+                </p>
                 <dl class="profile-meta">
-                    <div class="meta-item">
-                        <dt>Camera Gear</dt>
-                        <dd>Nikon Z 50II</dd>
-                    </div>
-                    <div class="meta-item">
-                        <dt>Base Region</dt>
-                        <dd>Tokyo / Chiba</dd>
-                    </div>
+                    <div class="meta-item"><dt>Gear</dt><dd>Nikon Z 50II</dd></div>
+                    <div class="meta-item"><dt>Base</dt><dd>Tokyo / Chiba</dd></div>
                 </dl>
             </div>
         </section>
 
         <section id="contact" class="screen" data-section="contact">
             <div class="contact-box reveal">
-                <h3 style="text-align: center; font-size: 1.6rem; margin-bottom: 40px; font-weight: 200; letter-spacing: 0.2em;">CONTACT</h3>
                 <form action="https://formspree.io/f/maqplpnr" method="POST">
-                    <div class="form-group">
-                        <label class="form-label">NAME</label>
-                        <input type="text" name="name" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">EMAIL</label>
-                        <input type="email" name="email" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">MESSAGE</label>
-                        <textarea name="message" class="form-input" rows="3" required></textarea>
-                    </div>
+                    <div class="form-group"><label class="form-label">NAME</label><input type="text" name="name" class="form-input" required></div>
+                    <div class="form-group"><label class="form-label">EMAIL</label><input type="email" name="email" class="form-input" required></div>
+                    <div class="form-group"><label class="form-label">MESSAGE</label><textarea name="message" class="form-input" rows="3" required></textarea></div>
                     <button type="submit" class="btn-luxury">SEND MESSAGE</button>
                 </form>
                 <div class="sns-group">
-                    <a href="https://www.instagram.com/7r11n_/?next=%2F" target="_blank" class="sns-link" aria-label="Instagram">
-                        <i data-lucide="instagram"></i>
-                    </a>
-                    <a href="https://x.com/cossrin" target="_blank" class="sns-link" aria-label="X (Twitter)">
-                        <i data-lucide="twitter"></i>
-                    </a>
+                    <a href="https://www.instagram.com/7r11n_/?next=%2F" target="_blank" class="sns-link"><i data-lucide="instagram"></i></a>
+                    <a href="https://x.com/cossrin" target="_blank" class="sns-link"><i data-lucide="twitter"></i></a>
                 </div>
             </div>
         </section>
@@ -281,134 +239,90 @@
 
     <script>
         /* ==========================================
-           DATA_CONFIG: 管理者はここを書き換えるだけ
+           DATA_CONFIG: この中身を書き換えるだけで更新完了
         ========================================== */
         const DATA_CONFIG = {
-            heroImages: ["001_1923.jpg", "001_2232.jpg", "001_1943.jpg"],
-            
+            heroImages: ["001_2232.jpg", "001_1923.jpg", "001_2199.jpg"],
             photos: [
-                {
-                    src: "001_1007.jpg", // 柴犬と猫の置物
-                    name: "静かな共生",
-                    desc: "暖かな光の中で、静かに佇む動物たち。彼らが作る空気感は、どこか優しく、どこか懐かしい。",
-                    exif: "Nikon Z 50II | f/2.8 | 1/125s | ISO 400"
-                },
-                {
-                    src: "001_1887.jpg", // 黄色の縄跳び
-                    name: "放課後の記憶",
-                    desc: "ベンチに取り残された鮮やかな黄色。遊びの終わりと、少しの寂しさが同居する夕暮れのひととき。",
-                    exif: "Nikon Z 50II | f/1.8 | 1/2000s | ISO 100"
-                },
-                {
-                    src: "001_1923.jpg", // 立体駐車場
-                    name: "都市の構造",
-                    desc: "整然と並ぶ光と影、鉄骨の幾何学模様。無機質な駐車場に、夜の静寂が降り積もる。",
-                    exif: "Nikon Z 50II | f/4.0 | 1/60s | ISO 800"
-                }
+                { src: "001_2232.jpg", name: "祈りの境界", desc: "静寂に包まれた寺院。赤い帽子を被った地蔵たちが、時代を超えてそこにある気配を写しました。", exif: "Nikon Z 50II | f/4.0 | 1/125s | ISO 400" },
+                { src: "001_1943.jpg", name: "街の色彩", desc: "都会の壁に描かれた力強いグラフィティ。無機質なレンガに命が吹き込まれる瞬間。", exif: "Nikon Z 50II | f/2.8 | 1/500s | ISO 100" },
+                { src: "001_1923.jpg", name: "夜の幾何学", desc: "立体駐車場の構造美。人工的な光が作り出す規則正しい影のパターン。", exif: "Nikon Z 50II | f/5.6 | 1/60s | ISO 800" },
+                { src: "001_2199.jpg", name: "深緑の導き", desc: "森へと続く石畳の階段。木漏れ日と影が織りなす、自然の静かなリズム。", exif: "Nikon Z 50II | f/4.5 | 1/160s | ISO 200" },
+                { src: "001_1887.jpg", name: "残された記憶", desc: "ベンチに置かれた鮮やかな縄跳び。日常の一コマに潜む、誰かの物語。", exif: "Nikon Z 50II | f/1.8 | 1/2000s | ISO 100" },
+                { src: "001_1007.jpg", name: "静かなる同居", desc: "棚に並んだ愛らしい動物たち。柔らかな光が、彼らの表情に温もりを与えます。", exif: "Nikon Z 50II | f/2.8 | 1/100s | ISO 400" }
             ],
-            
             news: [
-                {
-                    date: "2026.03.17",
-                    title: "ポートフォリオサイトを開設いたしました",
-                    body: "これまでの作品をまとめたアーカイブサイトを公開しました。刻々と変わる光の表情を、ここで共有していければと思います。"
-                }
+                { date: "2026.03.17", title: "ポートフォリオサイト開設", body: "写真作品をまとめたアーカイブサイトを公開しました。刻々と変わる光の記録を、ここで共有していきます。" }
             ]
         };
 
-        /* ==========================================
-           Dynamic Rendering Engine
-        ========================================== */
-        
-        // Hero Slider Injection
+        // Hero Init
         const heroSlider = document.getElementById('heroSlider');
-        DATA_CONFIG.heroImages.forEach((img, idx) => {
-            heroSlider.innerHTML += `<img src="${img}" class="${idx===0?'active':''}">`;
-        });
+        DATA_CONFIG.heroImages.forEach((img, i) => heroSlider.innerHTML += `<img src="${img}" class="${i===0?'active':''}">`);
 
-        // Gallery Injection
+        // Gallery Init
         const galleryRoot = document.getElementById('gallery-root');
-        DATA_CONFIG.photos.forEach((item, index) => {
+        DATA_CONFIG.photos.forEach((p, i) => {
             galleryRoot.innerHTML += `
                 <section class="screen" data-section="gallery">
                     <div class="gallery-container">
-                        <div class="item-visual reveal" onclick="openModal(${index})">
-                            <img src="${item.src}" alt="${item.name}">
-                        </div>
+                        <div class="item-visual reveal" onclick="openModal(${i})"><img src="${p.src}"></div>
                         <div class="item-info reveal">
-                            <span class="item-num">Archive 0${index + 1}</span>
-                            <h3 class="item-name">${item.name}</h3>
-                            <p class="item-desc">${item.desc}</p>
+                            <span class="item-num">Archive 0${i+1}</span>
+                            <h3 class="item-name">${p.name}</h3>
+                            <p class="item-desc">${p.desc}</p>
                         </div>
                     </div>
                 </section>`;
         });
 
-        // News Injection
+        // News Init
         const newsList = document.getElementById('news-list');
-        DATA_CONFIG.news.forEach(item => {
-            newsList.innerHTML += `
-                <div class="news-item">
-                    <span class="news-date">${item.date}</span>
-                    <h4 class="news-title">${item.title}</h4>
-                    <p class="news-body">${item.body}</p>
-                </div>`;
+        DATA_CONFIG.news.forEach(n => {
+            newsList.innerHTML += `<div class="news-item"><span class="news-date">${n.date}</span><h4 class="news-title">${n.title}</h4><p class="news-body">${n.body}</p></div>`;
         });
 
-        /* ==========================================
-           Interactions & UI Control
-        ========================================== */
-        
-        // Modal logic
+        // Modal Logic
         const modal = document.getElementById('galleryModal');
-        function openModal(idx) {
-            const data = DATA_CONFIG.photos[idx];
-            document.getElementById('modalImg').src = data.src;
-            document.getElementById('modalTitle').textContent = data.name;
-            document.getElementById('modalExif').textContent = data.exif;
+        function openModal(i) {
+            const p = DATA_CONFIG.photos[i];
+            document.getElementById('modalImg').src = p.src;
+            document.getElementById('modalTitle').textContent = p.name;
+            document.getElementById('modalExif').textContent = p.exif;
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
+        document.getElementById('modalOverlay').onclick = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
 
-        // Close modal on overlay click
-        document.getElementById('modalOverlay').addEventListener('click', (e) => {
-            if(e.target.id === 'modalOverlay' || e.target.id === 'modalImg') {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        // Background Crossfade
-        let currentSlide = 0;
+        // Scroll & Animations
+        let currentIdx = 0;
         const heroSlides = document.querySelectorAll('#heroSlider img');
         setInterval(() => {
-            heroSlides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % heroSlides.length;
-            heroSlides[currentSlide].classList.add('active');
-        }, 6000);
+            heroSlides[currentIdx].classList.remove('active');
+            currentIdx = (currentIdx + 1) % heroSlides.length;
+            heroSlides[currentIdx].classList.add('active');
+        }, 5000);
 
-        // Header & Scroll Spy
         const header = document.getElementById('mainHeader');
         const navLinks = document.querySelectorAll('.nav-link');
         const sections = document.querySelectorAll('section, .screen');
 
-        window.addEventListener('scroll', () => {
-            header.classList.toggle('scrolled', window.scrollY > 50);
-        });
+        window.onscroll = () => header.classList.toggle('scrolled', window.scrollY > 50);
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
                     const id = entry.target.getAttribute('data-section') || entry.target.id;
-                    navLinks.forEach(link => {
-                        link.classList.toggle('active', link.getAttribute('data-section') === id);
-                    });
+                    navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('data-section') === id));
                 }
             });
         }, { threshold: 0.5 });
+        sections.forEach(s => observer.observe(s));
 
-        sections.forEach(sec => observer.observe(sec));
         lucide.createIcons();
     </script>
 </body>
