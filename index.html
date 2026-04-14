@@ -16,7 +16,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* --- Design System --- */
+        /* --- Design System (維持) --- */
         :root {
             --color-bg: #050505;
             --color-bg-layer: #0c0c0c;
@@ -41,7 +41,11 @@
             letter-spacing: 0.1em;
             overflow-x: hidden;
             width: 100%;
+            /* 改善⑧: 初期状態を非表示にしてローディング後に表示 */
+            opacity: 0;
+            transition: opacity 1.5s ease;
         }
+        body.is-loaded { opacity: 1; }
 
         .screen {
             height: 100vh; width: 100%;
@@ -50,7 +54,7 @@
             overflow: hidden;
         }
 
-        /* --- Header (Stable & Fixed) --- */
+        /* --- Header --- */
         .header {
             position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h);
             z-index: 1000; display: flex; align-items: center; padding: 0 40px;
@@ -83,137 +87,93 @@
         .hero-slider img.active { opacity: 0.45; transform: scale(1.0); z-index: 2; }
         .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 20%, #000 140%); z-index: 3; }
         .hero-content { position: relative; z-index: 4; text-align: center; width: 100%; padding: 0 20px; }
-        .hero-title { font-size: clamp(1.5rem, 7vw, 3rem); font-weight: 200; letter-spacing: 0.5em; line-height: 1.8; margin-bottom: 20px; }
+        .hero-title { font-size: clamp(1.5rem, 7vw, 3rem); font-weight: 200; letter-spacing: 0.5em; line-height: 1.8; margin-bottom: 10px; }
+        /* 改善①: ポートフォリオであることを伝える1行 */
+        .hero-sub-label { font-family: var(--font-sans); font-size: 0.65rem; letter-spacing: 0.8em; color: var(--color-text-dim); margin-bottom: 25px; opacity: 0.8; }
 
-        /* --- Gallery Section --- */
+        /* --- Gallery Section (改善②: 2枚1組のグリッド対応) --- */
         .gallery-container {
-            width: 100%; max-width: 1200px; padding: 0 40px;
-            display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; align-items: center;
+            width: 100%; max-width: 1300px; padding: 0 60px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 40px; align-items: center;
         }
-        .item-visual { position: relative; overflow: hidden; background: #000; box-shadow: 0 30px 60px rgba(0,0,0,0.6); cursor: pointer; }
+        .gallery-item { display: flex; flex-direction: column; gap: 20px; }
+        .item-visual { position: relative; overflow: hidden; background: #000; box-shadow: 0 20px 50px rgba(0,0,0,0.5); cursor: pointer; transition: transform 0.8s var(--ease-luxury); }
         .item-visual img { width: 100%; display: block; transition: 1.5s var(--ease-luxury); filter: brightness(0.85); }
-        .item-visual:hover img { transform: scale(1.05); filter: brightness(1.1); }
-        .item-info { padding-right: 20px; }
-        .item-num { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.65rem; margin-bottom: 10px; display: block; }
-        .item-name { font-size: clamp(1.4rem, 4vw, 2.2rem); margin-bottom: 20px; font-weight: 400; letter-spacing: 0.2em; }
-        .item-desc { font-size: 0.85rem; color: var(--color-text-dim); font-weight: 200; line-height: 2.2; }
+        .item-visual:hover img { transform: scale(1.08); filter: brightness(1.1); }
+        .item-info { padding-left: 5px; }
+        .item-num { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.6rem; margin-bottom: 5px; display: block; opacity: 0.7; }
+        .item-name { font-size: 1.1rem; margin-bottom: 8px; font-weight: 400; letter-spacing: 0.15em; }
+        .item-desc { font-size: 0.75rem; color: var(--color-text-dim); font-weight: 200; line-height: 1.8; }
 
-        /* --- Modal --- */
+        /* --- Modal (改善③: desc表示対応) --- */
         .modal {
             position: fixed; inset: 0; background: rgba(5,5,5,0.98); z-index: 2000;
             display: flex; opacity: 0; pointer-events: none; transition: 0.6s var(--ease-luxury);
         }
         .modal.active { opacity: 1; pointer-events: auto; }
         .modal-inner { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; cursor: pointer; }
-        .modal-img { max-width: 90%; max-height: 70vh; object-fit: contain; pointer-events: none; }
-        .modal-info { text-align: center; margin-top: 30px; max-width: 700px; pointer-events: none; }
-        .modal-title { font-size: 1.3rem; letter-spacing: 0.2em; margin-bottom: 10px; }
-        .modal-exif { font-family: var(--font-sans); font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.7; }
+        .modal-img { max-width: 85%; max-height: 65vh; object-fit: contain; pointer-events: none; transition: transform 0.6s var(--ease-luxury); }
+        .modal.active .modal-img { transform: scale(1); }
+        .modal-info { text-align: center; margin-top: 25px; max-width: 600px; pointer-events: none; }
+        .modal-title { font-size: 1.2rem; letter-spacing: 0.2em; margin-bottom: 8px; }
+        .modal-desc { font-size: 0.8rem; color: var(--color-text-dim); margin-bottom: 15px; font-weight: 200; line-height: 1.8; }
+        .modal-exif { font-family: var(--font-sans); font-size: 0.55rem; color: var(--color-gold); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.6; }
 
-        /* --- News Section --- */
-        .news-box { width: 90%; max-width: 800px; background: var(--color-bg-layer); padding: 50px 40px; border: 1px solid rgba(197, 160, 89, 0.12); }
-        .news-item { padding: 25px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .news-date { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.7rem; display: block; margin-bottom: 8px; }
-        .news-title { font-size: 1.05rem; font-weight: 400; margin-bottom: 10px; }
-        .news-body { font-size: 0.85rem; color: var(--color-text-dim); line-height: 2.0; }
+        /* --- News Section (改善⑦: SNS誘導強化) --- */
+        .news-box { width: 90%; max-width: 800px; background: var(--color-bg-layer); padding: 50px 40px; border: 1px solid rgba(197, 160, 89, 0.12); text-align: center; }
+        .news-item { padding: 25px 0; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: left; }
+        .instagram-link-btn { display: inline-flex; align-items: center; gap: 10px; color: var(--color-gold); text-decoration: none; font-size: 0.75rem; margin-top: 20px; font-family: var(--font-sans); letter-spacing: 0.2em; transition: 0.3s; }
+        .instagram-link-btn:hover { opacity: 0.7; }
 
-        /* --- Profile Section --- */
+        /* --- Instagram Floating (改善⑤: 固定アイコン) --- */
+        .insta-float {
+            position: fixed; bottom: 30px; right: 30px; z-index: 900;
+            color: var(--color-gold); opacity: 0.4; transition: 0.4s;
+        }
+        .insta-float:hover { opacity: 1; transform: translateY(-3px); }
+
+        /* --- Profile & Contact (維持) --- */
         .profile-card { max-width: 750px; text-align: center; padding: 0 30px; width: 100%; }
         .profile-vision { font-size: 1.15rem; margin: 40px 0; line-height: 2.8; word-break: keep-all; }
         .profile-meta { display: flex; justify-content: center; gap: 60px; margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px; }
         .meta-item dt { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.3em; margin-bottom: 10px; text-transform: uppercase; }
         .meta-item dd { font-size: 1.1rem; font-weight: 200; }
-
-        /* --- Contact Section --- */
         .contact-box { width: 90%; max-width: 600px; background: var(--color-bg-layer); padding: 60px 40px; border: 1px solid rgba(197, 160, 89, 0.12); }
-        .form-group { margin-bottom: 25px; text-align: left; }
-        .form-label { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.2em; display: block; margin-bottom: 10px; }
-        .form-input { 
-            width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; 
-            padding: 12px 0; color: #fff; font-family: var(--font-serif); font-size: 1rem; transition: 0.4s;
-            border-radius: 0; /* iOS fix */
-        }
+        .form-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; padding: 12px 0; color: #fff; font-family: var(--font-serif); font-size: 1rem; transition: 0.4s; border-radius: 0; }
         .form-input:focus { outline: none; border-bottom: 1px solid var(--color-gold); }
-        .btn-luxury {
-            width: 100%; padding: 20px; border: 1px solid var(--color-gold); background: transparent;
-            color: var(--color-gold); cursor: pointer; transition: 0.5s; letter-spacing: 0.4em; font-family: var(--font-sans);
-        }
-        .sns-group { display: flex; justify-content: center; gap: 40px; margin-top: 50px; }
-        .sns-link { color: var(--color-text-dim); transition: 0.3s; }
+        .btn-luxury { width: 100%; padding: 20px; border: 1px solid var(--color-gold); background: transparent; color: var(--color-gold); cursor: pointer; transition: 0.5s; letter-spacing: 0.4em; font-family: var(--font-sans); }
 
-        /* --- Animation Utilities --- */
-        .reveal { opacity: 0; transform: translateY(30px); transition: 1.8s var(--ease-luxury); }
+        /* --- Reveal --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1.5s var(--ease-luxury); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* ============================================================
-           MOBILE OPTIMIZATION (375px - 480px)
-        ============================================================ */
-        @media screen and (max-width: 480px) {
-            :root { --header-h: 70px; }
-            
-            /* Header Logo Stability */
-            .header { padding: 0 20px; height: var(--header-h); }
-            .logo-name { font-size: 1.1rem; letter-spacing: 0.3em; }
-            .logo-sub { font-size: 0.5rem; letter-spacing: 0.3em; white-space: nowrap; }
-            .nav-list { gap: 12px; }
-            .nav-link { font-size: 0.6rem; letter-spacing: 0.1em; }
-
-            /* Hero Section Clipping Fix */
-            .hero-title { font-size: 1.3rem; letter-spacing: 0.35em; padding: 0 10px; }
-            .hero-content p { font-size: 0.65rem; }
-
-            /* Gallery Clipping Fix */
-            .gallery-container { grid-template-columns: 1fr; gap: 25px; padding: 0 25px; align-content: center; }
-            .item-visual { max-width: 100%; margin: 0 auto; box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
-            .item-info { padding: 0; text-align: center; }
-            .item-name { font-size: 1.3rem; margin-bottom: 12px; }
-            .item-desc { font-size: 0.75rem; line-height: 1.8; padding: 0 5px; }
-
-            /* Modal Scaling Fix */
-            .modal-inner { padding: 15px; }
-            .modal-img { max-height: 60vh; width: auto; max-width: 100%; }
-            .modal-title { font-size: 1.1rem; }
-            .modal-info { margin-top: 20px; width: 100%; }
-
-            /* Profile Clipping Fix */
-            .profile-card { padding: 0 20px; }
-            .profile-vision { font-size: 0.95rem; margin: 25px 0; line-height: 2.4; }
-            .profile-vision p:last-child { font-size: 0.75rem; margin-top: 20px; }
-            .profile-meta { flex-direction: column; gap: 20px; margin-top: 30px; padding-top: 30px; }
-            .meta-item dd { font-size: 1rem; }
-
-            /* News Section Fix */
-            .news-box { padding: 35px 20px; width: 92%; }
-            .news-title { font-size: 0.95rem; }
-            .news-body { font-size: 0.75rem; }
-
-            /* Contact Form Fix */
-            .contact-box { padding: 40px 25px; width: 92%; }
-            .btn-luxury { padding: 16px; font-size: 0.75rem; }
-            .sns-group { margin-top: 35px; gap: 30px; }
-
-            /* Global Reveal Adjustment */
-            .reveal { transform: translateY(20px); }
-        }
-
-        /* Prevent horizontal scroll on small devices */
-        @media screen and (max-width: 374px) {
-            .logo-name { font-size: 1rem; }
-            .nav-list { gap: 8px; }
+        /* --- Mobile Optimization --- */
+        @media screen and (max-width: 768px) {
+            .gallery-container { grid-template-columns: 1fr; padding: 0 30px; }
+            .item-visual { max-width: 90%; margin: 0 auto; }
+            .item-info { text-align: center; padding: 0; }
+            .header { padding: 0 20px; }
+            .nav-list { gap: 15px; }
+            .insta-float { bottom: 20px; right: 20px; }
+            .profile-meta { gap: 20px; flex-direction: column; }
         }
     </style>
 </head>
-<body>
+<body id="top">
+
+    <a href="https://www.instagram.com/7r11n_/" target="_blank" class="insta-float" aria-label="Instagram">
+        <i data-lucide="instagram" size="20"></i>
+    </a>
 
     <header class="header" id="mainHeader">
         <div class="header-inner">
-            <a href="#home" class="logo">
+            <a href="#top" class="logo">
                 <span class="logo-name">田中 凛</span>
                 <span class="logo-sub">FRAGMENTS OF LIFE</span>
             </a>
             <nav>
                 <ul class="nav-list">
-                    <li><a href="#gallery-root" class="nav-link" data-section="gallery">Gallery</a></li>
+                    <li><a href="#gallery-section" class="nav-link" data-section="gallery">Gallery</a></li>
                     <li><a href="#vision" class="nav-link" data-section="vision">Vision</a></li>
                     <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
                 </ul>
@@ -226,6 +186,7 @@
             <div class="hero-slider" id="heroSlider"></div>
             <div class="hero-overlay"></div>
             <div class="hero-content reveal">
+                <p class="hero-sub-label">PHOTOGRAPHY PORTFOLIO</p>
                 <h1 class="hero-title">掬い上げるのは、<br>名もなき日常。</h1>
                 <p style="font-family: var(--font-accent); color: var(--color-gold); letter-spacing: 0.6em; font-size: 0.8rem;">THE ARCHIVE OF FRAGMENTS</p>
             </div>
@@ -235,8 +196,11 @@
 
         <section id="news" class="screen" data-section="news">
             <div class="news-box reveal">
-                <h2 style="text-align: center; font-size: 1.4rem; margin-bottom: 30px; font-weight: 200; letter-spacing: 0.4em;">NEWS</h2>
+                <h2 style="text-align: center; font-size: 1.4rem; margin-bottom: 20px; font-weight: 200; letter-spacing: 0.4em;">NEWS / INSTAGRAM</h2>
                 <div id="news-list"></div>
+                <a href="https://www.instagram.com/7r11n_/" target="_blank" class="instagram-link-btn">
+                    VIEW MORE ON INSTAGRAM <i data-lucide="external-link" size="14"></i>
+                </a>
             </div>
         </section>
 
@@ -268,13 +232,13 @@
             <div class="contact-box reveal">
                 <h3 style="text-align: center; font-size: 1.4rem; margin-bottom: 30px; font-weight: 200; letter-spacing: 0.3em;">CONTACT</h3>
                 <form action="https://formspree.io/f/maqplpnr" method="POST">
-                    <div class="form-group"><label class="form-label">NAME</label><input type="text" name="name" class="form-input" required></div>
-                    <div class="form-group"><label class="form-label">EMAIL</label><input type="email" name="email" class="form-input" required></div>
-                    <div class="form-group"><label class="form-label">MESSAGE</label><textarea name="message" class="form-input" rows="3" required></textarea></div>
+                    <div class="form-group" style="margin-bottom:25px; text-align:left;"><label style="font-size:0.6rem; color:var(--color-gold); letter-spacing:0.2em; display:block; margin-bottom:10px;">NAME</label><input type="text" name="name" class="form-input" required></div>
+                    <div class="form-group" style="margin-bottom:25px; text-align:left;"><label style="font-size:0.6rem; color:var(--color-gold); letter-spacing:0.2em; display:block; margin-bottom:10px;">EMAIL</label><input type="email" name="email" class="form-input" required></div>
+                    <div class="form-group" style="margin-bottom:25px; text-align:left;"><label style="font-size:0.6rem; color:var(--color-gold); letter-spacing:0.2em; display:block; margin-bottom:10px;">MESSAGE</label><textarea name="message" class="form-input" rows="3" required></textarea></div>
                     <button type="submit" class="btn-luxury">SEND MESSAGE</button>
                 </form>
                 <div class="sns-group">
-                    <a href="https://www.instagram.com/7r11n_/?next=%2F" target="_blank" class="sns-link" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+                    <a href="https://www.instagram.com/7r11n_/" target="_blank" class="sns-link" aria-label="Instagram"><i data-lucide="instagram"></i></a>
                     <a href="https://x.com/cossrin" target="_blank" class="sns-link" aria-label="X (Twitter)"><i data-lucide="twitter"></i></a>
                 </div>
             </div>
@@ -286,6 +250,7 @@
             <img src="" alt="" class="modal-img" id="modalImg">
             <div class="modal-info">
                 <h4 class="modal-title" id="modalTitle"></h4>
+                <p class="modal-desc" id="modalDesc"></p>
                 <p class="modal-exif" id="modalExif"></p>
             </div>
         </div>
@@ -303,40 +268,57 @@
                 { src: "001_1007.jpg", name: "動物たちの同居", desc: "店先に並んだ置物たち。日常を彩る、小さくとも確かな愛着。", exif: "Nikon Z 50II | f/2.8 | 1/100s" }
             ],
             news: [
-                { date: "2026.03.17", title: "ポートフォリオサイト開設", body: "記憶に残らない日常の一片を綴る、アーカイブを公開しました。" }
+                { date: "2026.03.17", title: "PORTFOLIO OPEN", body: "日常の断片を記録するアーカイブサイトを公開しました。Instagramでは日々更新を行っています。" }
             ]
         };
 
+        // --- Init Hero ---
         const heroSlider = document.getElementById('heroSlider');
         DATA_CONFIG.heroImages.forEach((img, idx) => {
             heroSlider.innerHTML += `<img src="${img}" class="${idx===0?'active':''}">`;
         });
 
+        // --- 改善②: Gallery Logic (2枚1組の生成) ---
         const galleryRoot = document.getElementById('gallery-root');
-        DATA_CONFIG.photos.forEach((item, index) => {
-            galleryRoot.innerHTML += `
-                <section class="screen" data-section="gallery">
-                    <div class="gallery-container">
-                        <div class="item-visual reveal" onclick="openModal(${index})"><img src="${item.src}" alt="${item.name}"></div>
+        for (let i = 0; i < DATA_CONFIG.photos.length; i += 2) {
+            let itemsHTML = '';
+            for (let j = 0; j < 2; j++) {
+                const idx = i + j;
+                if (!DATA_CONFIG.photos[idx]) break;
+                const item = DATA_CONFIG.photos[idx];
+                itemsHTML += `
+                    <div class="gallery-item">
+                        <div class="item-visual reveal" onclick="openModal(${idx})">
+                            <img src="${item.src}" alt="${item.name}" loading="lazy">
+                        </div>
                         <div class="item-info reveal">
-                            <span class="item-num">Fragment 0${index + 1}</span>
+                            <span class="item-num">Fragment 0${idx + 1}</span>
                             <h3 class="item-name">${item.name}</h3>
                             <p class="item-desc">${item.desc}</p>
                         </div>
-                    </div>
+                    </div>`;
+            }
+            // 最初のgallery sectionにIDを振る (改善④用)
+            const sectionID = (i === 0) ? 'id="gallery-section"' : '';
+            galleryRoot.innerHTML += `
+                <section ${sectionID} class="screen" data-section="gallery">
+                    <div class="gallery-container">${itemsHTML}</div>
                 </section>`;
-        });
+        }
 
+        // --- Init News ---
         const newsList = document.getElementById('news-list');
         DATA_CONFIG.news.forEach(item => {
             newsList.innerHTML += `<div class="news-item"><span class="news-date">${item.date}</span><h4 class="news-title">${item.title}</h4><p class="news-body">${item.body}</p></div>`;
         });
 
+        // --- Modal ---
         const modal = document.getElementById('galleryModal');
         function openModal(idx) {
             const data = DATA_CONFIG.photos[idx];
             document.getElementById('modalImg').src = data.src;
             document.getElementById('modalTitle').textContent = data.name;
+            document.getElementById('modalDesc').textContent = data.desc; // 改善③
             document.getElementById('modalExif').textContent = data.exif;
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -348,6 +330,7 @@
             }
         });
 
+        // --- Slider Loop ---
         let currentSlide = 0;
         const heroSlides = document.querySelectorAll('#heroSlider img');
         setInterval(() => {
@@ -356,6 +339,7 @@
             heroSlides[currentSlide].classList.add('active');
         }, 6000);
 
+        // --- UX/UI Logic ---
         const header = document.getElementById('mainHeader');
         const navLinks = document.querySelectorAll('.nav-link');
         const sections = document.querySelectorAll('section, .screen');
@@ -364,18 +348,26 @@
             header.classList.toggle('scrolled', window.scrollY > 20);
         });
 
+        // 改善④: IntersectionObserver
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
-                    const id = entry.target.getAttribute('data-section') || entry.target.id;
-                    navLinks.forEach(link => {
-                        link.classList.toggle('active', link.getAttribute('data-section') === id);
-                    });
+                    const id = entry.target.getAttribute('data-section');
+                    if (id) {
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('data-section') === id);
+                        });
+                    }
                 }
             });
         }, { threshold: 0.4 });
         sections.forEach(sec => observer.observe(sec));
+
+        // 改善⑧: Loading
+        window.addEventListener('load', () => {
+            document.body.classList.add('is-loaded');
+        });
 
         lucide.createIcons();
     </script>
