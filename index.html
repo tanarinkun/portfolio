@@ -40,7 +40,7 @@
             letter-spacing: 0.1em;
             overflow-x: hidden;
             opacity: 0;
-            transition: opacity 1.5s ease;
+            transition: opacity 2s ease; /* 改善⑦: より深い余韻のためのフェード */
         }
         body.loaded { opacity: 1; }
 
@@ -55,21 +55,22 @@
         .header {
             position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h);
             z-index: 1000; display: flex; align-items: center; padding: 0 40px;
-            transition: all 0.6s var(--ease-luxury);
+            transition: all 0.8s var(--ease-luxury);
         }
         .header.scrolled {
-            height: 65px; background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(15px);
+            height: 65px; background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(197, 160, 89, 0.1);
         }
         .header-inner { width: 100%; display: flex; justify-content: space-between; align-items: center; }
         .logo { text-decoration: none; color: #fff; display: flex; flex-direction: column; }
         .logo-name { font-size: 1.2rem; font-weight: 600; letter-spacing: 0.4em; line-height: 1.2; }
-        .logo-sub { font-family: var(--font-accent); font-size: 0.5rem; color: var(--color-gold); letter-spacing: 0.5em; margin-top: 4px; }
+        /* 改善①: Heroのブランド性を高めるサブタイトル */
+        .logo-sub { font-family: var(--font-accent); font-size: 0.55rem; color: var(--color-gold); letter-spacing: 0.5em; margin-top: 4px; }
 
         .nav-list { display: flex; list-style: none; gap: 30px; }
         .nav-link { 
             text-decoration: none; color: #fff; font-size: 0.7rem; font-family: var(--font-sans);
-            letter-spacing: 0.2em; opacity: 0.35; transition: 0.4s; text-transform: uppercase;
+            letter-spacing: 0.2em; opacity: 0.3; transition: 0.5s; text-transform: uppercase;
         }
         .nav-link.active { opacity: 1; color: var(--color-gold); }
 
@@ -77,101 +78,102 @@
         .hero-slider { position: absolute; inset: 0; z-index: 1; }
         .hero-slider img {
             position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-            opacity: 0; transform: scale(1.1); transition: opacity 3s ease, transform 15s linear;
+            opacity: 0; transform: scale(1.05); transition: opacity 3s ease, transform 15s linear;
         }
-        .hero-slider img.active { opacity: 0.4; transform: scale(1.0); }
+        .hero-slider img.active { opacity: 0.45; transform: scale(1.0); }
         .hero-overlay { position: absolute; inset: 0; background: radial-gradient(circle, transparent 20%, #000 150%); z-index: 2; }
         
         .hero-content { position: relative; z-index: 3; text-align: center; }
-        .hero-label { font-family: var(--font-sans); font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.8em; margin-bottom: 20px; display: block; opacity: 0.8; }
-        .hero-title { font-size: clamp(1.5rem, 6vw, 2.8rem); font-weight: 200; letter-spacing: 0.5em; line-height: 1.8; margin-bottom: 30px; }
+        .hero-label { font-family: var(--font-sans); font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.8em; margin-bottom: 25px; display: block; opacity: 0.8; }
+        .hero-title { font-size: clamp(1.5rem, 6vw, 2.6rem); font-weight: 200; letter-spacing: 0.6em; line-height: 1.8; margin-bottom: 35px; }
         
-        /* Instagram導線（Hero） */
-        .hero-sns { display: flex; justify-content: center; gap: 20px; opacity: 0.6; transition: 0.4s; }
-        .hero-sns:hover { opacity: 1; }
-        .hero-sns a { color: var(--color-ivory); text-decoration: none; font-size: 0.7rem; letter-spacing: 0.2em; display: flex; align-items: center; gap: 8px; }
+        /* 改善⑤: Instagram導線の一致 */
+        .hero-sns a { color: var(--color-ivory); text-decoration: none; font-size: 0.65rem; letter-spacing: 0.3em; display: inline-flex; align-items: center; gap: 10px; opacity: 0.5; transition: 0.4s; }
+        .hero-sns a:hover { opacity: 1; color: var(--color-gold); }
 
-        /* Gallery Layout (2カラム) */
+        /* --- 改善④: Gallery Visual & Animation --- */
         .gallery-container {
             width: 100%; max-width: 1300px; padding: 0 40px;
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 60px; align-items: center;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 80px; align-items: center;
         }
         .gallery-item { display: flex; flex-direction: column; gap: 20px; position: relative; }
+        /* 遅延の演出用 */
+        .gallery-item:nth-child(even) { margin-top: 40px; } 
+
         .item-visual { 
             position: relative; overflow: hidden; background: #000; 
-            cursor: pointer; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            cursor: pointer; box-shadow: 0 25px 60px rgba(0,0,0,0.6);
         }
-        .item-visual img { width: 100%; display: block; transition: 1.5s var(--ease-luxury); filter: brightness(0.8); }
-        .item-visual:hover img { transform: scale(1.05); filter: brightness(1); }
+        .item-visual img { width: 100%; display: block; transition: 1.8s var(--ease-luxury); filter: brightness(0.85); }
+        .item-visual:hover img { transform: scale(1.04); filter: brightness(1); }
         
         .item-info { padding: 0 5px; }
-        .item-num { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.6rem; margin-bottom: 5px; display: block; opacity: 0.6; }
-        .item-name { font-size: 1.1rem; font-weight: 400; letter-spacing: 0.15em; margin-bottom: 8px; }
-        .item-desc { font-size: 0.75rem; color: var(--color-text-dim); font-weight: 200; line-height: 1.8; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .item-num { font-family: var(--font-accent); color: var(--color-gold); font-size: 0.55rem; margin-bottom: 6px; display: block; opacity: 0.5; }
+        .item-name { font-size: 1.05rem; font-weight: 400; letter-spacing: 0.2em; margin-bottom: 10px; }
+        .item-desc { font-size: 0.75rem; color: var(--color-text-dim); font-weight: 200; line-height: 2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* Modal */
+        /* --- 改善②: Modal UX --- */
         .modal {
-            position: fixed; inset: 0; background: rgba(5,5,5,0.98); z-index: 2000;
+            position: fixed; inset: 0; background: rgba(4,4,4,0.99); z-index: 2000;
             display: flex; opacity: 0; pointer-events: none; transition: 0.6s var(--ease-luxury);
         }
         .modal.active { opacity: 1; pointer-events: auto; }
         .modal-inner { 
             position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; padding: 40px; cursor: zoom-out;
+            align-items: center; justify-content: center; padding: 40px;
         }
-        .modal-img { 
-            max-width: 90%; max-height: 70vh; object-fit: contain; 
-            transform: scale(0.95); transition: 0.8s var(--ease-luxury); 
-        }
-        .modal.active .modal-img { transform: scale(1); }
+        .modal-close-trigger { position: absolute; inset: 0; z-index: 2001; cursor: zoom-out; }
         
-        .modal-info { text-align: center; margin-top: 30px; max-width: 600px; pointer-events: none; }
-        .modal-title { font-size: 1.2rem; letter-spacing: 0.2em; margin-bottom: 15px; }
-        .modal-desc { font-size: 0.85rem; color: var(--color-text-dim); margin-bottom: 20px; font-weight: 200; line-height: 2; }
-        .modal-exif { font-family: var(--font-sans); font-size: 0.55rem; color: var(--color-gold); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.5; }
+        .modal-img-wrap { position: relative; z-index: 2002; max-width: 90%; max-height: 70vh; display: flex; justify-content: center; }
+        .modal-img { max-width: 100%; max-height: 70vh; object-fit: contain; transform: scale(0.98); opacity: 0; transition: 0.8s var(--ease-luxury); }
+        .modal.active .modal-img { transform: scale(1); opacity: 1; }
+        
+        .modal-info { position: relative; z-index: 2002; text-align: center; margin-top: 35px; max-width: 600px; pointer-events: none; }
+        .modal-title { font-size: 1.2rem; letter-spacing: 0.3em; margin-bottom: 15px; }
+        .modal-desc { font-size: 0.85rem; color: var(--color-text-dim); margin-bottom: 20px; font-weight: 200; line-height: 2.2; }
+        .modal-exif { font-family: var(--font-sans); font-size: 0.55rem; color: var(--color-gold); letter-spacing: 0.25em; text-transform: uppercase; opacity: 0.4; }
 
-        /* 固定Instagramボタン */
+        /* 改善⑤: 右下Instagram固定リンク */
         .insta-fixed {
-            position: fixed; bottom: 30px; right: 30px; z-index: 900;
-            width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
-            color: var(--color-gold); border: 1px solid rgba(197, 160, 89, 0.3);
-            border-radius: 50%; text-decoration: none; transition: 0.4s;
-            background: rgba(5, 5, 5, 0.5); backdrop-filter: blur(5px);
+            position: fixed; bottom: 35px; right: 35px; z-index: 900;
+            width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+            color: var(--color-gold); border: 1px solid rgba(197, 160, 89, 0.25);
+            border-radius: 50%; text-decoration: none; transition: 0.5s;
+            background: rgba(5, 5, 5, 0.4); backdrop-filter: blur(8px);
         }
         .insta-fixed:hover { border-color: var(--color-gold); transform: translateY(-5px); background: var(--color-bg-layer); }
 
-        /* Profile / Vision */
+        /* Vision & Contact (既存世界観の磨き上げ) */
         .profile-card { max-width: 800px; text-align: center; padding: 0 40px; }
-        .profile-vision { font-size: 1.1rem; margin: 40px 0; line-height: 2.8; font-weight: 200; }
-        .profile-meta { display: flex; justify-content: center; gap: 60px; margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px; }
-        .meta-item dt { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.3em; margin-bottom: 10px; text-transform: uppercase; }
-        .meta-item dd { font-size: 1rem; font-weight: 200; }
+        .profile-vision { font-size: 1.1rem; margin: 45px 0; line-height: 3; font-weight: 200; }
+        .profile-meta { display: flex; justify-content: center; gap: 60px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 50px; }
+        .meta-item dt { font-size: 0.55rem; color: var(--color-gold); letter-spacing: 0.4em; margin-bottom: 12px; text-transform: uppercase; }
+        .meta-item dd { font-size: 0.95rem; font-weight: 200; color: var(--color-ivory); }
 
-        /* Contact */
-        .contact-box { width: 90%; max-width: 600px; background: var(--color-bg-layer); padding: 60px 40px; border: 1px solid rgba(197, 160, 89, 0.1); }
         .btn-luxury { 
-            width: 100%; padding: 20px; border: 1px solid var(--color-gold); background: transparent; 
-            color: var(--color-gold); cursor: pointer; transition: 0.5s; letter-spacing: 0.4em; font-family: var(--font-sans); font-size: 0.7rem;
+            width: 100%; padding: 22px; border: 1px solid rgba(197, 160, 89, 0.4); background: transparent; 
+            color: var(--color-gold); cursor: pointer; transition: 0.5s var(--ease-luxury); letter-spacing: 0.5em; font-family: var(--font-sans); font-size: 0.65rem;
         }
-        .btn-luxury:hover { background: var(--color-gold); color: #000; }
+        .btn-luxury:hover { background: var(--color-gold); color: #000; border-color: var(--color-gold); }
 
-        /* Animation */
-        .reveal { opacity: 0; transform: translateY(30px); transition: 1.5s var(--ease-luxury); }
+        /* --- Reveal Animation 改善④ --- */
+        .reveal { opacity: 0; transform: translateY(40px); transition: 1.8s var(--ease-luxury); }
         .reveal.active { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.2s; }
+        .delay-2 { transition-delay: 0.4s; }
 
-        /* Responsive */
         @media screen and (max-width: 768px) {
-            .gallery-container { grid-template-columns: 1fr; gap: 40px; padding: 0 30px; }
-            .item-visual { max-width: 90%; margin: 0 auto; }
-            .header { padding: 0 20px; }
-            .nav-list { gap: 15px; }
-            .insta-fixed { bottom: 20px; right: 20px; width: 40px; height: 40px; }
+            .gallery-container { grid-template-columns: 1fr; gap: 50px; padding: 0 30px; }
+            .gallery-item:nth-child(even) { margin-top: 0; }
+            .item-visual { max-width: 95%; margin: 0 auto; }
+            .header { padding: 0 25px; }
+            .nav-list { gap: 18px; }
         }
     </style>
 </head>
 <body>
 
-    <a href="https://www.instagram.com/rin_tanaka23" target="_blank" class="insta-fixed" aria-label="Instagram">
+    <a href="https://www.instagram.com/rin_tanaka23" target="_blank" rel="noopener noreferrer" class="insta-fixed" aria-label="Instagram">
         <i data-lucide="instagram" size="18"></i>
     </a>
 
@@ -179,7 +181,7 @@
         <div class="header-inner">
             <a href="#home" class="logo">
                 <span class="logo-name">田中 凛</span>
-                <span class="logo-sub">PHOTOGRAPHY PORTFOLIO</span>
+                <span class="logo-sub">PHOTOGRAPHY BY RIN TANAKA</span>
             </a>
             <nav>
                 <ul class="nav-list">
@@ -199,7 +201,7 @@
                 <span class="hero-label">VISUAL ARCHIVE</span>
                 <h1 class="hero-title">静寂を、<br>編む。</h1>
                 <div class="hero-sns">
-                    <a href="https://www.instagram.com/rin_tanaka23" target="_blank">
+                    <a href="https://www.instagram.com/rin_tanaka23" target="_blank" rel="noopener noreferrer">
                         <i data-lucide="instagram" size="14"></i> INSTAGRAM
                     </a>
                 </div>
@@ -210,47 +212,50 @@
 
         <section id="vision" class="screen" data-section="vision">
             <div class="profile-card reveal">
-                <p class="logo-sub" style="margin-bottom: 15px;">Concept</p>
-                <h2 style="font-size: 1.8rem; font-weight: 200; letter-spacing: 0.4em;">日常の断片</h2>
+                <p class="logo-sub" style="margin-bottom: 15px; opacity: 0.6;">Concept</p>
+                <h2 style="font-size: 1.6rem; font-weight: 200; letter-spacing: 0.5em;">日常の断片</h2>
                 <div class="profile-vision">
                     <p>通り過ぎてしまう光、<br>名前のない時間。</p>
-                    <p style="color: var(--color-text-dim); font-size: 0.85rem; max-width: 500px; margin: 20px auto 0;">
+                    <p style="color: var(--color-text-dim); font-size: 0.8rem; max-width: 480px; margin: 25px auto 0;">
                         目に見えるもの以上の空気感を、<br>一枚の静止画の中に閉じ込める。
                     </p>
                 </div>
                 <dl class="profile-meta">
                     <div class="meta-item"><dt>Artist</dt><dd>Rin Tanaka</dd></div>
                     <div class="meta-item"><dt>Location</dt><dd>Tokyo / Chiba</dd></div>
-                    <div class="meta-item"><dt>Camera</dt><dd>Nikon Z Series</dd></div>
+                    <div class="meta-item"><dt>Gear</dt><dd>Nikon Z Series</dd></div>
                 </dl>
             </div>
         </section>
 
         <section id="contact" class="screen" data-section="contact">
             <div class="contact-box reveal">
-                <h3 style="text-align: center; font-size: 1.2rem; margin-bottom: 40px; font-weight: 200; letter-spacing: 0.3em;">CONTACT</h3>
+                <h3 style="text-align: center; font-size: 1.1rem; margin-bottom: 45px; font-weight: 200; letter-spacing: 0.4em;">CONTACT</h3>
                 <form action="https://formspree.io/f/maqplpnr" method="POST">
-                    <div style="margin-bottom:25px;">
-                        <input type="text" name="name" placeholder="NAME" class="btn-luxury" style="text-align:left; border:none; border-bottom:1px solid #333; padding:10px 0; background:transparent; color:#fff; border-radius:0;" required>
+                    <div style="margin-bottom:30px;">
+                        <input type="text" name="name" placeholder="NAME" class="btn-luxury" style="text-align:left; border:none; border-bottom:1px solid rgba(255,255,255,0.1); padding:10px 0; background:transparent; color:#fff; border-radius:0;" required>
                     </div>
-                    <div style="margin-bottom:25px;">
-                        <input type="email" name="email" placeholder="EMAIL" class="btn-luxury" style="text-align:left; border:none; border-bottom:1px solid #333; padding:10px 0; background:transparent; color:#fff; border-radius:0;" required>
+                    <div style="margin-bottom:30px;">
+                        <input type="email" name="email" placeholder="EMAIL" class="btn-luxury" style="text-align:left; border:none; border-bottom:1px solid rgba(255,255,255,0.1); padding:10px 0; background:transparent; color:#fff; border-radius:0;" required>
                     </div>
-                    <div style="margin-bottom:40px;">
-                        <textarea name="message" placeholder="MESSAGE" rows="3" class="btn-luxury" style="text-align:left; border:none; border-bottom:1px solid #333; padding:10px 0; background:transparent; color:#fff; border-radius:0; resize:none;" required></textarea>
+                    <div style="margin-bottom:45px;">
+                        <textarea name="message" placeholder="MESSAGE" rows="3" class="btn-luxury" style="text-align:left; border:none; border-bottom:1px solid rgba(255,255,255,0.1); padding:10px 0; background:transparent; color:#fff; border-radius:0; resize:none;" required></textarea>
                     </div>
                     <button type="submit" class="btn-luxury">SEND INQUIRY</button>
                 </form>
-                <p style="text-align: center; margin-top: 30px; font-size: 0.6rem; opacity: 0.4;">
-                    OR DM VIA <a href="https://www.instagram.com/rin_tanaka23" target="_blank" style="color: var(--color-gold); text-decoration: none;">INSTAGRAM</a>
+                <p style="text-align: center; margin-top: 35px; font-size: 0.6rem; opacity: 0.3; letter-spacing: 0.2em;">
+                    OR DM VIA <a href="https://www.instagram.com/rin_tanaka23" target="_blank" rel="noopener noreferrer" style="color: var(--color-gold); text-decoration: none;">INSTAGRAM</a>
                 </p>
             </div>
         </section>
     </main>
 
-    <div class="modal" id="galleryModal">
-        <div class="modal-inner" id="modalOverlay">
-            <img src="" alt="" class="modal-img" id="modalImg">
+    <div class="modal" id="galleryModal" role="dialog" aria-modal="true">
+        <div class="modal-close-trigger" id="modalClose"></div>
+        <div class="modal-inner">
+            <div class="modal-img-wrap">
+                <img src="" alt="" class="modal-img" id="modalImg">
+            </div>
             <div class="modal-info">
                 <h4 class="modal-title" id="modalTitle"></h4>
                 <p class="modal-desc" id="modalDesc"></p>
@@ -260,16 +265,16 @@
     </div>
 
     <script>
-        // --- DATA_CONFIG: 既存＋新規の全写真リスト ---
+        // --- DATA_CONFIG 改善⑦: 追加を容易にする設計 ---
         const DATA_CONFIG = {
             heroImages: ["001_1923.jpg", "001_2232.jpg", "001_2199.jpg"],
             photos: [
-                { src: "001_3622.JPG", name: "対話のほとり", desc: "水面に映る緑と、寄り添う白い影。静かな時間が流れる場所。", exif: "f/4.5 | 1/200s | ISO 400" },
-                { src: "001_3603.JPG", name: "木漏れ日の記憶", desc: "苔むした石を撫でる光。森が呼吸する一瞬を切り取る。", exif: "f/2.8 | 1/500s | ISO 100" },
-                { src: "001_3556.JPG", name: "燃ゆる影", desc: "重なり合う楓の葉。色彩の層が空気を重厚に染め上げる。", exif: "f/5.6 | 1/125s | ISO 200" },
-                { src: "001_3547.JPG", name: "一輪の呼吸", desc: "鮮やかな紅が、淡い背景に浮き立つ。生命の輪郭。", exif: "f/1.8 | 1/1000s | ISO 100" },
-                { src: "001_3467.JPG", name: "時の澱み", desc: "水草の中に佇む古い設備。自然と人工物が溶け合う瞬間。", exif: "f/8.0 | 1/60s | ISO 800" },
-                { src: "001_3535.JPG", name: "標本の世界", desc: "静止した時間の中に閉じ込められた、自然の造形美。", exif: "f/4.0 | 1/160s | ISO 200" },
+                { src: "001_3622.jpg", name: "対話のほとり", desc: "水面に映る緑と、寄り添う白い影。静かな時間が流れる場所。", exif: "f/4.5 | 1/200s | ISO 400" },
+                { src: "001_3603.jpg", name: "木漏れ日の記憶", desc: "苔むした石を撫でる光。森が呼吸する一瞬を切り取る。", exif: "f/2.8 | 1/500s | ISO 100" },
+                { src: "001_3556.jpg", name: "燃ゆる影", desc: "重なり合う楓の葉。色彩の層が空気を重厚に染め上げる。", exif: "f/5.6 | 1/125s | ISO 200" },
+                { src: "001_3547.jpg", name: "一輪の呼吸", desc: "鮮やかな紅が、淡い背景に浮き立つ。生命の輪郭。", exif: "f/1.8 | 1/1000s | ISO 100" },
+                { src: "001_3467.jpg", name: "時の澱み", desc: "水草の中に佇む古い設備。自然と人工物が溶け合う瞬間。", exif: "f/8.0 | 1/60s | ISO 800" },
+                { src: "001_3535.jpg", name: "標本の世界", desc: "静止した時間の中に閉じ込められた、自然の造形美。", exif: "f/4.0 | 1/160s | ISO 200" },
                 { src: "001_2232.jpg", name: "境界の静寂", desc: "光と影が交差する、日常の中の非日常的な空間。", exif: "f/2.8 | 1/100s | ISO 400" },
                 { src: "001_2199.jpg", name: "都市の脈動", desc: "無機質な構造物が見せる、一瞬の有機的な表情。", exif: "f/5.6 | 1/250s | ISO 100" },
                 { src: "001_1943.jpg", name: "移ろい", desc: "季節が通り過ぎる瞬間の、淡い色彩の記憶。", exif: "f/2.0 | 1/800s | ISO 100" },
@@ -279,7 +284,9 @@
             ]
         };
 
-        // --- ギャラリー生成ロジック ---
+        let currentPhotoIndex = 0;
+
+        // --- ギャラリー動的生成 (改善④: Delayの付与) ---
         function initGallery() {
             const root = document.getElementById('gallery-root');
             const photos = DATA_CONFIG.photos;
@@ -291,12 +298,14 @@
                 let pairHTML = '';
                 pair.forEach((photo, idx) => {
                     const globalIdx = i + idx;
+                    // 左右でアニメーションのディレイを変えて視線誘導をスムーズに
+                    const delayClass = idx === 0 ? 'delay-1' : 'delay-2';
                     pairHTML += `
                         <div class="gallery-item">
-                            <div class="item-visual reveal" onclick="openModal(${globalIdx})">
-                                <img src="${photo.src}" alt="${photo.name}" loading="lazy">
+                            <div class="item-visual reveal ${delayClass}" onclick="openModal(${globalIdx})">
+                                <img src="${photo.src}" alt="${photo.name} - Rin Tanaka Photography" loading="lazy">
                             </div>
-                            <div class="item-info reveal">
+                            <div class="item-info reveal ${delayClass}">
                                 <span class="item-num">#${(globalIdx + 1).toString().padStart(3, '0')}</span>
                                 <h3 class="item-name">${photo.name}</h3>
                                 <p class="item-desc">${photo.desc}</p>
@@ -313,38 +322,77 @@
             }
         }
 
-        // --- Modal Control ---
+        // --- Modal Control (改善②: キーボード & 遷移ロジック) ---
         const modal = document.getElementById('galleryModal');
-        function openModal(idx) {
+        
+        function updateModalContent(idx) {
             const data = DATA_CONFIG.photos[idx];
-            document.getElementById('modalImg').src = data.src;
-            document.getElementById('modalTitle').textContent = data.name;
-            document.getElementById('modalDesc').textContent = data.desc;
-            document.getElementById('modalExif').textContent = data.exif;
+            const img = document.getElementById('modalImg');
+            // 画像の切り替え時に一度透明にする
+            img.style.opacity = '0';
+            
+            setTimeout(() => {
+                img.src = data.src;
+                document.getElementById('modalTitle').textContent = data.name;
+                document.getElementById('modalDesc').textContent = data.desc;
+                document.getElementById('modalExif').textContent = data.exif;
+                img.onload = () => { img.style.opacity = '1'; };
+            }, 200);
+        }
+
+        function openModal(idx) {
+            currentPhotoIndex = idx;
+            updateModalContent(idx);
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        document.getElementById('modalOverlay').addEventListener('click', () => {
+        function closeModal() {
             modal.classList.remove('active');
             document.body.style.overflow = '';
+        }
+
+        // キーボード操作対応
+        window.addEventListener('keydown', (e) => {
+            if (!modal.classList.contains('active')) return;
+            if (e.key === 'Escape') closeModal();
+            if (e.key === 'ArrowRight') {
+                currentPhotoIndex = (currentPhotoIndex + 1) % DATA_CONFIG.photos.length;
+                updateModalContent(currentPhotoIndex);
+            }
+            if (e.key === 'ArrowLeft') {
+                currentPhotoIndex = (currentPhotoIndex - 1 + DATA_CONFIG.photos.length) % DATA_CONFIG.photos.length;
+                updateModalContent(currentPhotoIndex);
+            }
         });
 
-        // --- Observer ---
+        document.getElementById('modalClose').addEventListener('click', closeModal);
+
+        // --- Observer (改善③: ナビゲーションの安定化) ---
         function initObserver() {
             const navLinks = document.querySelectorAll('.nav-link');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+                        
                         const section = entry.target.getAttribute('data-section');
+                        const id = entry.target.id;
+
                         navLinks.forEach(link => {
-                            link.classList.toggle('active', link.getAttribute('data-section') === section);
+                            const linkSection = link.getAttribute('data-section');
+                            // galleryセクションが複数ある場合でも、最初のgallery-0で判定、あるいはgallery内なら点灯
+                            if (section === 'gallery') {
+                                link.classList.toggle('active', linkSection === 'gallery');
+                            } else {
+                                link.classList.toggle('active', linkSection === section);
+                            }
                         });
-                        document.getElementById('mainHeader').classList.toggle('scrolled', window.scrollY > 100);
+                        
+                        document.getElementById('mainHeader').classList.toggle('scrolled', window.scrollY > 80);
                     }
                 });
-            }, { threshold: 0.3 });
+            }, { threshold: 0.4 });
             document.querySelectorAll('section').forEach(sec => observer.observe(sec));
         }
 
@@ -362,7 +410,8 @@
             initObserver();
             lucide.createIcons();
 
-            setTimeout(() => { document.body.classList.add('loaded'); }, 100);
+            // 改善⑦: ロード後のフェードインをゆったりと
+            setTimeout(() => { document.body.classList.add('loaded'); }, 200);
         });
 
         // Hero Slider Loop
@@ -374,7 +423,7 @@
                 currentHero = (currentHero + 1) % imgs.length;
                 imgs[currentHero].classList.add('active');
             }
-        }, 6000);
+        }, 7000);
     </script>
 </body>
 </html>
