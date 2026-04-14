@@ -39,7 +39,7 @@
             line-height: 1.8;
             letter-spacing: 0.1em;
             overflow-x: hidden;
-            opacity: 0; /* 修正⑦: ローディング用初期状態 */
+            opacity: 0;
             transition: opacity 1.5s ease;
         }
         body.loaded { opacity: 1; }
@@ -86,12 +86,12 @@
         .hero-label { font-family: var(--font-sans); font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.8em; margin-bottom: 20px; display: block; opacity: 0.8; }
         .hero-title { font-size: clamp(1.5rem, 6vw, 2.8rem); font-weight: 200; letter-spacing: 0.5em; line-height: 1.8; margin-bottom: 30px; }
         
-        /* 修正①: Hero Instagram導線 */
+        /* Instagram導線（Hero） */
         .hero-sns { display: flex; justify-content: center; gap: 20px; opacity: 0.6; transition: 0.4s; }
         .hero-sns:hover { opacity: 1; }
         .hero-sns a { color: var(--color-ivory); text-decoration: none; font-size: 0.7rem; letter-spacing: 0.2em; display: flex; align-items: center; gap: 8px; }
 
-        /* --- 修正④: Gallery (2カラム拡張レイアウト) --- */
+        /* Gallery Layout (2カラム) */
         .gallery-container {
             width: 100%; max-width: 1300px; padding: 0 40px;
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 60px; align-items: center;
@@ -109,7 +109,7 @@
         .item-name { font-size: 1.1rem; font-weight: 400; letter-spacing: 0.15em; margin-bottom: 8px; }
         .item-desc { font-size: 0.75rem; color: var(--color-text-dim); font-weight: 200; line-height: 1.8; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* --- 修正⑥: Modal 強化 --- */
+        /* Modal */
         .modal {
             position: fixed; inset: 0; background: rgba(5,5,5,0.98); z-index: 2000;
             display: flex; opacity: 0; pointer-events: none; transition: 0.6s var(--ease-luxury);
@@ -119,7 +119,6 @@
             position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; padding: 40px; cursor: zoom-out;
         }
-        /* 修正⑦: スムーズな拡大 */
         .modal-img { 
             max-width: 90%; max-height: 70vh; object-fit: contain; 
             transform: scale(0.95); transition: 0.8s var(--ease-luxury); 
@@ -131,7 +130,7 @@
         .modal-desc { font-size: 0.85rem; color: var(--color-text-dim); margin-bottom: 20px; font-weight: 200; line-height: 2; }
         .modal-exif { font-family: var(--font-sans); font-size: 0.55rem; color: var(--color-gold); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.5; }
 
-        /* --- 修正①: 固定Instagramボタン --- */
+        /* 固定Instagramボタン */
         .insta-fixed {
             position: fixed; bottom: 30px; right: 30px; z-index: 900;
             width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
@@ -141,13 +140,14 @@
         }
         .insta-fixed:hover { border-color: var(--color-gold); transform: translateY(-5px); background: var(--color-bg-layer); }
 
-        /* --- Vision / Contact (既存維持) --- */
+        /* Profile / Vision */
         .profile-card { max-width: 800px; text-align: center; padding: 0 40px; }
         .profile-vision { font-size: 1.1rem; margin: 40px 0; line-height: 2.8; font-weight: 200; }
         .profile-meta { display: flex; justify-content: center; gap: 60px; margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px; }
         .meta-item dt { font-size: 0.6rem; color: var(--color-gold); letter-spacing: 0.3em; margin-bottom: 10px; text-transform: uppercase; }
         .meta-item dd { font-size: 1rem; font-weight: 200; }
 
+        /* Contact */
         .contact-box { width: 90%; max-width: 600px; background: var(--color-bg-layer); padding: 60px 40px; border: 1px solid rgba(197, 160, 89, 0.1); }
         .btn-luxury { 
             width: 100%; padding: 20px; border: 1px solid var(--color-gold); background: transparent; 
@@ -155,11 +155,11 @@
         }
         .btn-luxury:hover { background: var(--color-gold); color: #000; }
 
-        /* --- アニメーション --- */
+        /* Animation */
         .reveal { opacity: 0; transform: translateY(30px); transition: 1.5s var(--ease-luxury); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* --- モバイル最適化 --- */
+        /* Responsive */
         @media screen and (max-width: 768px) {
             .gallery-container { grid-template-columns: 1fr; gap: 40px; padding: 0 30px; }
             .item-visual { max-width: 90%; margin: 0 auto; }
@@ -260,50 +260,30 @@
     </div>
 
     <script>
-        // --- 修正②③: データ構成 (ここに追加するだけで反映されます) ---
+        // --- DATA_CONFIG: 既存＋新規の全写真リスト ---
         const DATA_CONFIG = {
             heroImages: ["001_1923.jpg", "001_2232.jpg", "001_2199.jpg"],
             photos: [
-                { 
-                    src: "001_3622.jpg", 
-                    name: "対話のほとり", 
-                    desc: "水面に映る緑と、寄り添う白い影。静かな時間が流れる場所。", 
-                    exif: "f/4.5 | 1/200s | ISO 400" 
-                },
-                { 
-                    src: "001_3603.jpg", 
-                    name: "木漏れ日の記憶", 
-                    desc: "苔むした石を撫でる光。森が呼吸する一瞬を切り取る。", 
-                    exif: "f/2.8 | 1/500s | ISO 100" 
-                },
-                { 
-                    src: "001_3556.jpg", 
-                    name: "燃ゆる影", 
-                    desc: "重なり合う楓の葉。色彩の層が空気を重厚に染め上げる。", 
-                    exif: "f/5.6 | 1/125s | ISO 200" 
-                },
-                { 
-                    src: "001_3547.jpg", 
-                    name: "一輪の呼吸", 
-                    desc: "鮮やかな紅が、淡い背景に浮き立つ。生命の輪郭。", 
-                    exif: "f/1.8 | 1/1000s | ISO 100" 
-                },
-                { 
-                    src: "001_3467.jpg", 
-                    name: "時の澱み", 
-                    desc: "水草の中に佇む古い設備。自然と人工物が溶け合う瞬間。", 
-                    exif: "f/8.0 | 1/60s | ISO 800" 
-                }
+                { src: "001_3622.jpg", name: "対話のほとり", desc: "水面に映る緑と、寄り添う白い影。静かな時間が流れる場所。", exif: "f/4.5 | 1/200s | ISO 400" },
+                { src: "001_3603.jpg", name: "木漏れ日の記憶", desc: "苔むした石を撫でる光。森が呼吸する一瞬を切り取る。", exif: "f/2.8 | 1/500s | ISO 100" },
+                { src: "001_3556.jpg", name: "燃ゆる影", desc: "重なり合う楓の葉。色彩の層が空気を重厚に染め上げる。", exif: "f/5.6 | 1/125s | ISO 200" },
+                { src: "001_3547.jpg", name: "一輪の呼吸", desc: "鮮やかな紅が、淡い背景に浮き立つ。生命の輪郭。", exif: "f/1.8 | 1/1000s | ISO 100" },
+                { src: "001_3467.jpg", name: "時の澱み", desc: "水草の中に佇む古い設備。自然と人工物が溶け合う瞬間。", exif: "f/8.0 | 1/60s | ISO 800" },
+                { src: "001_3535.jpg", name: "標本の世界", desc: "静止した時間の中に閉じ込められた、自然の造形美。", exif: "f/4.0 | 1/160s | ISO 200" },
+                { src: "001_2232.jpg", name: "境界の静寂", desc: "光と影が交差する、日常の中の非日常的な空間。", exif: "f/2.8 | 1/100s | ISO 400" },
+                { src: "001_2199.jpg", name: "都市の脈動", desc: "無機質な構造物が見せる、一瞬の有機的な表情。", exif: "f/5.6 | 1/250s | ISO 100" },
+                { src: "001_1943.jpg", name: "移ろい", desc: "季節が通り過ぎる瞬間の、淡い色彩の記憶。", exif: "f/2.0 | 1/800s | ISO 100" },
+                { src: "001_1923.jpg", name: "光の粒子", desc: "空気に溶け込むような、柔らかな午後の光を捉えて。", exif: "f/1.8 | 1/2000s | ISO 100" },
+                { src: "001_1887.jpg", name: "静かなる断片", desc: "足元に転がる、誰にも気づかれない美しさ。", exif: "f/4.0 | 1/60s | ISO 800" },
+                { src: "001_1007.jpg", name: "原風景", desc: "記憶の奥底に眠る、懐かしくも新しい景色。", exif: "f/8.0 | 1/125s | ISO 200" }
             ]
         };
 
-        // --- 修正②④: ギャラリー動的生成ロジック ---
+        // --- ギャラリー生成ロジック ---
         function initGallery() {
             const root = document.getElementById('gallery-root');
             const photos = DATA_CONFIG.photos;
-            let currentScreenHTML = '';
             
-            // 2枚ずつペアにして .screen を作成
             for (let i = 0; i < photos.length; i += 2) {
                 const pair = photos.slice(i, i + 2);
                 const screenId = `gallery-${Math.floor(i/2)}`;
@@ -339,7 +319,7 @@
             const data = DATA_CONFIG.photos[idx];
             document.getElementById('modalImg').src = data.src;
             document.getElementById('modalTitle').textContent = data.name;
-            document.getElementById('modalDesc').textContent = data.desc; // 修正⑥
+            document.getElementById('modalDesc').textContent = data.desc;
             document.getElementById('modalExif').textContent = data.exif;
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -350,32 +330,26 @@
             document.body.style.overflow = '';
         });
 
-        // --- Observer for Animations & Nav ---
+        // --- Observer ---
         function initObserver() {
             const navLinks = document.querySelectorAll('.nav-link');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
-                        
-                        // Nav Active
                         const section = entry.target.getAttribute('data-section');
                         navLinks.forEach(link => {
                             link.classList.toggle('active', link.getAttribute('data-section') === section);
                         });
-
-                        // Header Style
                         document.getElementById('mainHeader').classList.toggle('scrolled', window.scrollY > 100);
                     }
                 });
             }, { threshold: 0.3 });
-
             document.querySelectorAll('section').forEach(sec => observer.observe(sec));
         }
 
-        // --- Init Everything ---
+        // --- Initialize ---
         window.addEventListener('DOMContentLoaded', () => {
-            // Hero
             const slider = document.getElementById('heroSlider');
             DATA_CONFIG.heroImages.forEach((src, i) => {
                 const img = document.createElement('img');
@@ -388,21 +362,19 @@
             initObserver();
             lucide.createIcons();
 
-            // 修正⑦: ローディング演出
-            setTimeout(() => {
-                document.body.classList.add('loaded');
-            }, 100);
+            setTimeout(() => { document.body.classList.add('loaded'); }, 100);
         });
 
         // Hero Slider Loop
         let currentHero = 0;
         setInterval(() => {
             const imgs = document.querySelectorAll('.hero-slider img');
-            imgs[currentHero].classList.remove('active');
-            currentHero = (currentHero + 1) % imgs.length;
-            imgs[currentHero].classList.add('active');
+            if(imgs.length > 0) {
+                imgs[currentHero].classList.remove('active');
+                currentHero = (currentHero + 1) % imgs.length;
+                imgs[currentHero].classList.add('active');
+            }
         }, 6000);
-
     </script>
 </body>
 </html>
